@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 
 const PrivacyPage = () => {
   const privacyItems = [
@@ -37,7 +36,7 @@ const PrivacyPage = () => {
             Privacy Policy
           </h1>
           <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            We keep it simple. Your privacy is important to us, and we're committed to protecting it.
+            We keep it simple. Your privacy is important to us, and we&lsquo;re committed to protecting it.
           </p>
         </div>
 
@@ -59,7 +58,7 @@ const PrivacyPage = () => {
         <div className="bg-white rounded-xl p-8 shadow-lg border border-blue-100 text-center">
           <h2 className="text-2xl font-semibold text-blue-700 mb-4">Questions?</h2>
           <p className="text-gray-600 mb-4">
-            We're here to help with any concerns about your privacy.
+            We&lsquo;re here to help with any concerns about your privacy.
           </p>
           <a 
             href="mailto:ouchen606@gmail.com" 

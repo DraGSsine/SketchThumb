@@ -300,8 +300,6 @@ const Sketch: React.FC = (): React.ReactElement => {
           
         console.log('Canvas saved to localStorage - both JSON and PNG');
         
-        // Update history with current objects
-        const currentObjects = fabricRef.current.getObjects();
         
       } catch (error) {
         console.error('Error saving canvas state:', error);
@@ -674,33 +672,6 @@ const Sketch: React.FC = (): React.ReactElement => {
     };
   }, [saveCanvasState]);
   
-  // Add forced save function for debugging (removed forceLoadCanvas as it's unused)
-  const forceSaveCanvas = (): boolean => {
-    console.log("Forcing canvas save to localStorage...");
-    if (fabricRef.current) {
-      // Create a JSON representation with all necessary properties
-      const json = JSON.stringify(fabricRef.current.toJSON([
-        'id', 'selectable', 'hasControls', 'hasBorders',
-        'lockMovementX', 'lockMovementY', 'lockRotation',
-        'lockScalingX', 'lockScalingY', 'lockUniScaling', 'evented'
-      ]));
-      
-      // Save directly to localStorage
-      localStorage.setItem(DRAWING_JSON_STORAGE_KEY, json);
-      
-      // Also save as PNG for compatibility
-      const dataUrl = fabricRef.current.toDataURL({
-        format: 'png',
-        quality: 0.9,
-        multiplier: 1
-      });
-      localStorage.setItem(DRAWING_STORAGE_KEY, dataUrl);
-      
-      console.log('Emergency canvas save completed');
-      return true;
-    }
-    return false;
-  };
 
   const handleToolChange = (newTool: Tool): void => {
     if (fabricRef.current) {
@@ -895,7 +866,7 @@ const Sketch: React.FC = (): React.ReactElement => {
       hasBorders: true
     });
 
-    canvas.add(text);``
+    canvas.add(text);
     canvas.setActiveObject(text);
     text.enterEditing();
     text.selectAll();

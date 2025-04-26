@@ -41,7 +41,7 @@ const Testimonials = () => {
             What Our <span className="text-blue-600">Users</span> Say
           </h2>
           <p className="text-base md:text-lg max-w-2xl mx-auto text-gray-700 dark:text-gray-300">
-            Hear from content creators who've improved their engagement with our AI thumbnail generator.
+            Hear from content creators who&apos;ve improved their engagement with our AI thumbnail generator.
           </p>
         </div>
 

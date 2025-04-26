@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Pencil, Image } from "../../../public/icons/SvgIcons";
+import { ArrowRight, Sparkles, Pencil, Image as ImageIcon } from "../../../public/icons/SvgIcons";
 
 const Hero = () => {
   return (
@@ -15,7 +15,7 @@ const Hero = () => {
               Turn Your Sketches Into <span className="text-blue-600">Stunning Thumbnails</span>
             </h1>
             <p className="text-lg mb-8 text-gray-700 dark:text-gray-300">
-              Transform your rough sketches into professional thumbnails in seconds. Boost your content's visibility with eye-catching thumbnails that drive more clicks.
+              Transform your rough sketches into professional thumbnails in seconds. Boost your content&apos;s visibility with eye-catching thumbnails that drive more clicks.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -94,7 +94,7 @@ const Hero = () => {
                   
                   <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
                     <div className="flex items-center mb-3">
-                      <Image className="h-5 w-5 mr-2 text-blue-500" />
+                      <ImageIcon className="h-5 w-5 mr-2 text-blue-500" />
                       <span className="font-medium text-gray-800">3. Professional Thumbnail</span>
                     </div>
                     <div className="h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">

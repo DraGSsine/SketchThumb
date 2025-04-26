@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { Metadata } from "next";
-import Image from "next/image";
 import Logo from "@/components/landing/logo";
 
 export const metadata: Metadata = {

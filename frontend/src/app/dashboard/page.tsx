@@ -5,7 +5,7 @@ import Drawing from "../../components/dashboard/Drawing";
 import Sidebar from "../../components/dashboard/sidebar";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ChevronLeft, ChevronRight } from "../../../public/icons/SvgIcons";
+import { ChevronLeft, ChevronRight } from "../../../public/icons/SvgIcons";
 
 export default function DashboardPage() {
   // Right sidebar state
@@ -115,7 +115,6 @@ export default function DashboardPage() {
           <Sidebar 
             showSidebar={showRightSidebar} 
             isMobile={viewport.isMobile}
-            isTablet={viewport.isTablet}
             isMounted={isMounted}
           />
         </div>

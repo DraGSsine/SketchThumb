@@ -48,7 +48,7 @@ const WhyUs = () => {
               Why Choose Our <span className="text-blue-600">Sketch to Thumbnail</span> Service?
             </h2>
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
-              Elevate your content with our AI-powered thumbnail generator. Whether you're a YouTuber, blogger, or social media creator, our tool transforms your simple sketches into professional thumbnails that drive engagement.
+              Elevate your content with our AI-powered thumbnail generator. Whether you&apos;re a YouTuber, blogger, or social media creator, our tool transforms your simple sketches into professional thumbnails that drive engagement.
             </p>
             <div className="flex flex-col space-y-3">
               <div className="flex items-start">

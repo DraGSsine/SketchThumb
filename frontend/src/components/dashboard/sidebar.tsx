@@ -30,7 +30,6 @@ const DRAWING_STORAGE_KEY = "logo-generator-canvas";
 type SidebarProps = {
   showSidebar: boolean;
   isMobile: boolean;
-  isTablet: boolean;
   isMounted: boolean;
 };
 
@@ -43,7 +42,7 @@ const PLATFORM_OPTIONS = [
   { label: "Twitter/X", value: "twitter" }
 ];
 
-const Sidebar = ({ showSidebar, isMobile, isTablet, isMounted }: SidebarProps) => {
+const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
   const { refetch } = useUserInfo();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
