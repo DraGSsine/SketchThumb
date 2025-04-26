@@ -11,11 +11,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "SketchThumb | Sketch toThumbnail Converter",
-    template: "%s | SketchThumb - Sketch toThumbnail AI Tool",
+    default: "scrive| Sketch toThumbnail Converter",
+    template: "%s | scrive- Sketch toThumbnail AI Tool",
   },
   description:
-    "SketchThumb transforms your sketches and images into professionalThumbnails using AI. Convert your design ideas into stunning, ready-to-useThumbnails with our powerful conversion tool.",
+    "scrivetransforms your sketches and images into professionalThumbnails using AI. Convert your design ideas into stunning, ready-to-useThumbnails with our powerful conversion tool.",
   keywords: [
     "sketch toThumbnail",
     "AIThumbnail generator",
@@ -51,8 +51,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "http://localhost:3000",
-    siteName: "SketchThumb - Sketch toThumbnail Converter",
-    title: "SketchThumb | Transform Sketches into ProfessionalThumbnails",
+    siteName: "scrive- Sketch toThumbnail Converter",
+    title: "scrive| Transform Sketches into ProfessionalThumbnails",
     description:
       "Turn your sketches and images into professionalThumbnails with SketchThumb. Our AI-powered tool helps you create stunningThumbnails from your design ideas quickly and efficiently.",
     images: [
@@ -60,13 +60,13 @@ export const metadata: Metadata = {
         url: "http://localhost:3000/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SketchThumb Sketch toThumbnail Converter Preview",
+        alt: "scriveSketch toThumbnail Converter Preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SketchThumb | AI-Powered Sketch toThumbnail Converter",
+    title: "scrive| AI-Powered Sketch toThumbnail Converter",
     description:
       "Transform your sketches and images into professionalThumbnails with SketchThumb. Create stunning brand identities with our AI-powered conversion tool.",
     creator: "@yassin_ouchen",

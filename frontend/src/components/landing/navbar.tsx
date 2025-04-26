@@ -12,11 +12,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -24,17 +20,18 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled ? "bg-white bg-opacity-80 dark:bg-slate-900 dark:bg-opacity-80 backdrop-blur-md shadow-sm py-4" : "py-6"
+    <header className={`fixed top-0 w-full z-50 ${
+      isScrolled ? "bg-white shadow-sm py-4 dark:bg-slate-900" : "py-6"
     }`}>
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between">
           <Logo size={32} />
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <div className="flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-6">
+            <div className="flex items-center space-x-5">
               {[
+                { name: "Home", href: "/" },
                 { name: "Pricing", href: "/#pricing" },
                 { name: "FAQ", href: "/#faq" },
                 { name: "Privacy", href: "/privacy" },
@@ -43,21 +40,21 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium"
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 ml-4">
               <Link href="/auth/signin">
                 <Button variant="outline" className="border-blue-600 text-blue-600">
                   Log In
                 </Button>
               </Link>
               <Link href="/auth/signup">
-                <Button className="bg-blue-600 text-zinc-100">Get Started</Button>
+                <Button className="bg-blue-600">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -79,8 +76,8 @@ const Navbar = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-gray-800">
-          <div className="container mx-auto px-4 py-4 divide-y divide-gray-100 dark:divide-gray-800">
-            <div className="py-3 space-y-3">
+          <div className="container mx-auto px-4 py-4">
+            <div className="space-y-3 mb-4">
               {[
                 { name: "Home", href: "/" },
                 { name: "Pricing", href: "/#pricing" },
@@ -91,7 +88,7 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-base font-medium"
+                  className="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -99,7 +96,7 @@ const Navbar = () => {
               ))}
             </div>
             
-            <div className="py-3 space-y-3">
+            <div className="space-y-3">
               <Link href="/auth/signin">
                 <Button variant="outline" className="w-full border-blue-600 text-blue-600">
                   Log In

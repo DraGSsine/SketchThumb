@@ -15,7 +15,11 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
   @Post('create-checkout-session')
   @UseGuards(JwtAuthGuard)
-  async createCheckoutSession(@Request() req, @Body('plan') plan: planType, @Body('subscriptionType') subscriptionType: 'monthly' | 'yearly') {
+  async createCheckoutSession(
+    @Request() req, 
+    @Body('plan') plan: planType, 
+    @Body('subscriptionType') subscriptionType: 'weekly' | 'monthly'
+  ) {
     return this.paymentsService.createCheckoutSession(plan, req.user.id, subscriptionType);
   }
 

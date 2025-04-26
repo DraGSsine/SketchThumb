@@ -35,6 +35,10 @@ export class UsersService {
         displayName: profile.displayName,
         avatar: profile.photos?.[0]?.value,
         password: crypto.randomBytes(16).toString('hex'),
+        plan: 'none', // Default to no plan
+        monthlyThumbnailLimit: 0, // No thumbnail limit
+        creditsUsed: 0,
+        subscriptionType: 'monthly'
       });
       await user.save();
     }
@@ -44,7 +48,16 @@ export class UsersService {
 
   async create(userData: Partial<User>): Promise<User> {
     await this.checkUserExists(userData.email!);
-    const user = new this.userModel(userData);
+    
+    // Set default values for new users - no plan, no credits
+    const user = new this.userModel({
+      ...userData,
+      plan: 'none', // Default to no plan
+      monthlyThumbnailLimit: 0, // No thumbnail limit
+      creditsUsed: 0,
+      subscriptionType: 'monthly'
+    });
+    
     return user.save();
   }
 
@@ -62,8 +75,9 @@ export class UsersService {
       displayName: userExist.displayName,
       avatar: userExist.avatar,
       plan: userExist.plan,
-      monthlyCredits: userExist.monthlyCredits,
+      monthlyThumbnailLimit: userExist.monthlyThumbnailLimit,
       creditsUsed: userExist.creditsUsed,
+      subscriptionType: userExist.subscriptionType
     };
   }
   

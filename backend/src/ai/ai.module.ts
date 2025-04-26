@@ -1,10 +1,10 @@
 // ai/ai.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '../model/UserSchema';
 import { AiController } from './ai.controller';
 import { AiService } from './ai.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/model/UserSchema';
 
 @Module({
   imports: [
@@ -13,5 +13,6 @@ import { User, UserSchema } from 'src/model/UserSchema';
   ],
   controllers: [AiController],
   providers: [AiService],
+  exports: [AiService],
 })
 export class AiModule {}

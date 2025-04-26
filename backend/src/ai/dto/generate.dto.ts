@@ -1,18 +1,16 @@
 // ai/dto/generate-content.dto.ts
-import { IsString, IsOptional } from 'class-validator';
-import { ThumbnailSettings } from '../../types/interface';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class GenerateDto {
+  @IsNotEmpty()
   @IsString()
   prompt: string;
 
-  @IsOptional()
-  settings: ThumbnailSettings;
-
-  @IsOptional()
-  sketch: any;
-
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  timestamp?: string;
+  sketch: string;
+
+  @IsNotEmpty()
+  @IsString()
+  targetPlatform: string;
 }

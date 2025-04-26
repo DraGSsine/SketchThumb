@@ -30,7 +30,7 @@ const Logo = ({
             textClass
           )}
         >
-          Draw<span className="text-[#2563eb]">Brand</span>
+          Scr<span className="text-[#2563eb]">ive</span>
         </div>
       )}
     </Link>

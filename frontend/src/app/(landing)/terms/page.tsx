@@ -6,7 +6,7 @@ const TermsPage = () => {
     {
       icon: "🎨",
       title: "Service",
-      description: "SketchThumb transforms your sketches into professional thumbnails using advanced AI technology."
+      description: "scrivetransforms your sketches into professional thumbnails using advanced AI technology."
     },
     {
       icon: "💰",

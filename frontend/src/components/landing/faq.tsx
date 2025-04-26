@@ -38,9 +38,9 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-16 md:py-20 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20">
+    <section className="py-16 md:py-20 bg-blue-50 dark:bg-blue-950/20">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-12 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>
+        <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-5">
             Frequently Asked <span className="text-blue-600">Questions</span>
           </h2>
@@ -49,7 +49,7 @@ const FAQ = () => {
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
+        <div className="max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`} className="border-b border-gray-300 dark:border-gray-700 last:border-0">

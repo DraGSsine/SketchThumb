@@ -9,7 +9,8 @@ import IconTool from "@/utils/drawing/IconTool";
 import ImageTool from "@/utils/drawing/ImageTool";
 import Toolbar from "./ToolBar";
 
-type Tool = "pencil" | "select" | "eraser" | "line" | "shape" | "icon" | "image";
+// Add 'text' to the Tool type
+type Tool = "pencil" | "select" | "eraser" | "line" | "shape" | "icon" | "image" | "text";
 type FillMode = 'regular' | 'solid';
 
 interface CanvasSize {
@@ -37,8 +38,6 @@ const Sketch: React.FC = (): React.ReactElement => {
   
   // Used in handleIconPathSelect for tracking added objects
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [history, setHistory] = useState<fabric.Object[]>([]);
-
   // Add constants for both storage keys
   const DRAWING_STORAGE_KEY = 'logo-generator-canvas';
   const DRAWING_JSON_STORAGE_KEY = 'logo-generator-canvas-json';
@@ -189,6 +188,11 @@ const Sketch: React.FC = (): React.ReactElement => {
         canvas.isDrawingMode = false;
         canvas.selection = true;
         break;
+
+      case "text":
+        canvas.isDrawingMode = false;
+        canvas.selection = true;
+        break;
     }
 
     canvas.requestRenderAll();
@@ -298,7 +302,6 @@ const Sketch: React.FC = (): React.ReactElement => {
         
         // Update history with current objects
         const currentObjects = fabricRef.current.getObjects();
-        setHistory(currentObjects);
         
       } catch (error) {
         console.error('Error saving canvas state:', error);
@@ -327,7 +330,6 @@ const Sketch: React.FC = (): React.ReactElement => {
             const loadedObjects = fabricRef.current?.getObjects() || [];
             console.log(`Loaded ${loadedObjects.length} objects from saved data`);
             
-            setHistory(loadedObjects);
             
             fabricRef.current?.renderAll();
           });
@@ -588,10 +590,12 @@ const Sketch: React.FC = (): React.ReactElement => {
   const handleClearCanvas = (): void => {
     const canvas = fabricRef.current;
     if (canvas) {
+      console.log("Clearing canvas...");
       canvas.clear();
       canvas.backgroundColor = "#ffffff";
       canvas.renderAll();
-      saveCanvasState(); // Use the updated saveCanvasState
+      console.log("Canvas cleared, saving state.");
+      saveCanvasState();
     }
   };
 
@@ -701,6 +705,7 @@ const Sketch: React.FC = (): React.ReactElement => {
   const handleToolChange = (newTool: Tool): void => {
     if (fabricRef.current) {
       fabricRef.current.discardActiveObject();
+      fabricRef.current.renderAll();
     }
     
     setTool(newTool);
@@ -708,6 +713,11 @@ const Sketch: React.FC = (): React.ReactElement => {
     // Open file dialog when image tool is selected
     if (newTool === "image" && fileInputRef.current) {
       fileInputRef.current.click();
+    }
+
+    // Add text object when text tool is selected
+    if (newTool === "text") {
+      addTextObject();
     }
   };
 
@@ -867,6 +877,32 @@ const Sketch: React.FC = (): React.ReactElement => {
     }
   };
 
+  // Function to add a new text object
+  const addTextObject = (): void => {
+    const canvas = fabricRef.current;
+    if (!canvas) return;
+
+    const text = new fabric.IText('Type here', {
+      left: canvas.width! / 2,
+      top: canvas.height! / 2,
+      originX: 'center',
+      originY: 'center',
+      fill: '#000000',
+      fontSize: 40,
+      fontFamily: 'Arial',
+      selectable: true,
+      hasControls: true,
+      hasBorders: true
+    });
+
+    canvas.add(text);``
+    canvas.setActiveObject(text);
+    text.enterEditing();
+    text.selectAll();
+    canvas.requestRenderAll();
+    saveCanvasState();
+  };
+
   return (
     <div className="flex flex-col h-full p-4">
       <div
@@ -900,16 +936,6 @@ const Sketch: React.FC = (): React.ReactElement => {
           </div>
         )}
         
-        {/* Small debug save button - keep just the save button but remove test button */}
-        <div className="absolute bottom-2 right-2 z-10">
-          <button 
-            onClick={forceSaveCanvas}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs py-1 px-2 rounded"
-            title="Force Save to LocalStorage"
-          >
-            Save
-          </button>
-        </div>
         
         {/* Canvas wrapper with focus ring */}
         <div 

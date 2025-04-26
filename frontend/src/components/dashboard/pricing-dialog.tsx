@@ -165,58 +165,53 @@ const SubscriptionDialog = () => {
 
   const plans = [
     {
-      name: "Starter",
+      name: "Weekly",
       price: "$9.99",
-      period: "/month",
+      period: "/week",
       description: "Perfect for getting started",
       features: [
-        "100Thumbnail generations per month",
-        "12,000+ icons library",
+        "20 sketch to thumbnail conversions per week",
+        "High-quality thumbnails",
         "24/7 support",
         "High resolution downloads",
-        "PNG downloads"
+        "PNG & JPG downloads"
       ],
       buttonText: "Get Started",
-      buttonVariant: "outline", 
-      delay: "0.2s",
-      subscriptionType: "monthly"
+      buttonVariant: "outline",
+      delay: "0.2s"
     },
     {
-      name: "Growth",
-      price: "$14.99",
+      name: "Starter",
+      price: "$20",
       period: "/month",
-      description: "Ideal for growing businesses",
+      description: "Ideal for small creators",
       features: [
-        "unlimitedThumbnail generations",
-        "12,000+ icons library",
-        "24/7 support", 
+        "50 sketch to thumbnail conversions per month",
+        "High-quality thumbnails",
+        "24/7 support",
         "High resolution downloads",
-        "PNG downloads",
-        
+        "PNG & JPG downloads"
       ],
       buttonText: "Get Started",
       buttonVariant: "primary",
       popular: true,
-      delay: "0.4s",
-      subscriptionType: "monthly"
+      delay: "0.4s"
     },
     {
-      name: "Pro",
-      price: "$149",
-      period: "/year",
-      description: "Best value for professionals",
+      name: "Growth",
+      price: "$35",
+      period: "/month",
+      description: "Best for growing channels",
       features: [
-        "UnlimitedThumbnail generations",
-        "2 months free",
-        "12,000+ icons library",
+        "100 sketch to thumbnail conversions per month",
+        "High-quality thumbnails",
         "24/7 support",
-        "High resolution downloads", 
-        "PNG downloads"
+        "High resolution downloads",
+        "PNG & JPG downloads"
       ],
-      buttonText: "Get Annual Plan",
+      buttonText: "Get Growth Plan",
       buttonVariant: "outline",
-      delay: "0.6s",
-      subscriptionType: "yearly"
+      delay: "0.6s"
     }
   ];
 

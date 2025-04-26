@@ -18,8 +18,11 @@ const CTA = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
                 <Button className="bg-blue-600 text-white hover:bg-blue-700 transition-colors">
-                  <span>Get Started</span>
+                  <span>Start Free Trial</span>
                   <ArrowRight className="ml-2 h-4 w-4"  iconPrimary="#fff" iconSecondary="#fff"/>
+                </Button>
+                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors">
+                  View Examples
                 </Button>
               </div>
             </div>

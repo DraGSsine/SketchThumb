@@ -48,7 +48,7 @@ const LogoFeatures = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>
           <h2 className="heading-lg mb-4">
-            Why Choose <span className="bg-blue-purple-gradient bg-clip-text text-transparent">SketchThumb AI</span>
+            Why Choose <span className="bg-blue-purple-gradient bg-clip-text text-transparent">scriveAI</span>
           </h2>
           <p className="paragraph max-w-2xl mx-auto">
             Our AIThumbnail generator combines advanced technology with design expertise to deliver outstanding results.

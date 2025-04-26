@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Metadata } from "next";
 import Image from "next/image";
-importThumbnail from "@/components/landing/logo";
+import Logo from "@/components/landing/logo";
 
 export const metadata: Metadata = {
   title: {
@@ -9,42 +9,6 @@ export const metadata: Metadata = {
     template: "%s | Authentication",
   },
   description: "Sign in or create an account to access your dashboard.",
-};
-
-const showcaseImages = {
-  row1: [
-    "/showcase/after-airplane-basic.png",
-    "/showcase/after-balloon-messy.png",
-    "/showcase/after-brain-rough.png",
-    "/showcase/after-wendys.png",
-    "/showcase/after-moonboy-beginner.png",
-    "/showcase/after-three-pictorial.png",
-    "/showcase/after-compass-amateur.png",
-    "/showcase/after-compass-pop.png",
-    "/showcase/after-dragon-line.png"
-  ],
-  row2: [
-    "/showcase/after-hand-shaky.png",
-    "/showcase/after-hourglass-basic.png",
-    "/showcase/after-house-wobbly.png",
-    "/showcase/after-lantern-crude.png",
-    "/showcase/after-lightbulb-messy.png",
-    "/showcase/after-lighthouse-cartoon.png",
-    "/showcase/after-lion-kawaii.png",
-    "/showcase/after-moonboy-beginner.png",
-    "/showcase/after-mountain-mascot.png"
-  ],
-  row3: [
-    "/showcase/after-owl-iconEmoji.png",
-    "/showcase/after-rocket-rough.png",
-    "/showcase/after-astronauts.png",
-    "/showcase/after-ship-comic.png",
-    "/showcase/after-telescope-crude.png",
-    "/showcase/after-three-pictorial.png",
-    "/showcase/after-tree-manga.png",
-    "/showcase/after-treehouse-crude.png",
-    "/showcase/after-wolf-abstract.png"
-  ]
 };
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
@@ -62,121 +26,63 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
 
         {/* Content Container with better organization */}
         <div className="relative flex flex-col h-full">
-          {/* Top Section withThumbnail */}
+          {/* Top Section with Logo */}
           <div className="mt-10 ml-10 bg-white p-2 rounded-xl w-44">
             <Logo size={100} textClass="" />
           </div>
 
           {/* Center Section with Text */}
-          <div className=" py-12">
+          <div className="flex-1 flex flex-col justify-center">
             <div className="px-12 max-w-lg">
               <h1 className="text-6xl font-extrabold text-white leading-tight">
-                Join Us
+                Welcome to <span className="text-cyan-200">Scrive</span>
               </h1>
-              <p className="text-lg text-blue-100 mt-4">
-                Create an account to unlock all features and start your journey with us.
+              <p className="text-xl text-blue-100 mt-6">
+                Transform your sketches into stunning thumbnails with the power of AI.
               </p>
-            </div>
-          </div>
-
-          {/* Bottom Section with Image Showcase */}
-          <div className="w-full auth-fadeIn">
-            <div className="relative z-10 overflow-hidden space-y-6 mb-12">
-              {/* First row - Left to Right */}
-              <div className="relative w-full overflow-hidden">
-                <div className="flex auth-slideLeftToRight">
-                  <div className="flex gap-6">
-                    {showcaseImages.row1.map((image, index) => (
-                      <div key={index} className="relative w-32 h-32 flex-shrink-0 hover:scale-105 transition-all duration-500 transform hover:-translate-y-1">
-                        <Image
-                          src={image}
-                          alt={`Logo example ${index + 1}`}
-                          fill
-                          className="object-contain bg-white rounded-xl shadow-lg p-2"
-                          sizes="(max-width: 128px) 100vw, 128px"
-                        />
-                      </div>
-                    ))}
-                    {showcaseImages.row1.map((image, index) => (
-                      <div key={`duplicate-${index}`} className="relative w-32 h-32 flex-shrink-0 hover:scale-105 transition-all duration-500 transform hover:-translate-y-1">
-                        <Image
-                          src={image}
-                          alt={`Logo example ${index + 1}`}
-                          fill
-                          className="object-contain bg-white rounded-xl shadow-lg p-2"
-                          sizes="(max-width: 128px) 100vw, 128px"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Second row - Right to Left */}
-              <div className="relative w-full overflow-hidden">
-                <div className="flex auth-slideRightToLeft">
-                  <div className="flex gap-6">
-                    {showcaseImages.row2.map((image, index) => (
-                      <div key={index} className="relative w-32 h-32 flex-shrink-0 hover:scale-105 transition-all duration-500 transform hover:-translate-y-1">
-                        <Image
-                          src={image}
-                          alt={`Logo example ${index + 9}`}
-                          fill
-                          className="object-contain bg-white rounded-xl shadow-lg p-2"
-                          sizes="(max-width: 128px) 100vw, 128px"
-                        />
-                      </div>
-                    ))}
-                    {showcaseImages.row2.map((image, index) => (
-                      <div key={`duplicate-${index}`} className="relative w-32 h-32 flex-shrink-0 hover:scale-105 transition-all duration-500 transform hover:-translate-y-1">
-                        <Image
-                          src={image}
-                          alt={`Logo example ${index + 9}`}
-                          fill
-                          className="object-contain bg-white rounded-xl shadow-lg p-2"
-                          sizes="(max-width: 128px) 100vw, 128px"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Third row - Left to Right */}
-              <div className="relative w-full overflow-hidden">
-                <div className="flex auth-slideLeftToRight">
-                  <div className="flex gap-6">
-                    {showcaseImages.row3.map((image, index) => (
-                      <div key={index} className="relative w-32 h-32 flex-shrink-0 hover:scale-105 transition-all duration-500 transform hover:-translate-y-1">
-                        <Image
-                          src={image}
-                          alt={`Logo example ${index + 18}`}
-                          fill
-                          className="object-contain bg-white rounded-xl shadow-lg p-2"
-                          sizes="(max-width: 128px) 100vw, 128px"
-                        />
-                      </div>
-                    ))}
-                    {showcaseImages.row3.map((image, index) => (
-                      <div key={`duplicate-${index}`} className="relative w-32 h-32 flex-shrink-0 hover:scale-105 transition-all duration-500 transform hover:-translate-y-1">
-                        <Image
-                          src={image}
-                          alt={`Logo example ${index + 18}`}
-                          fill
-                          className="object-contain bg-white rounded-xl shadow-lg p-2"
-                          sizes="(max-width: 128px) 100vw, 128px"
-                        />
-                      </div>
-                    ))}
-                  </div>
+              <div className="mt-8">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 text-blue-50 backdrop-blur-sm">
+                  <span className="mr-2">✨</span>
+                  <span>Quick. Simple. Powerful.</span>
                 </div>
               </div>
             </div>
-
-            {/* Floating elements */}
-            <div className="absolute top-1/4 right-20 w-40 h-40 rounded-full bg-blue-200/60 blur-3xl auth-float"></div>
-            <div className="absolute bottom-1/4 left-20 w-48 h-48 rounded-full bg-purple-200/60 blur-3xl auth-float-delayed"></div>
           </div>
+
+          {/* Bottom Section with Features */}
+          <div className="w-full mb-16 px-12">
+            <div className="grid grid-cols-3 gap-6">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 transform transition-all duration-300 hover:-translate-y-1 hover:bg-white/15">
+                <div className="text-cyan-200 text-lg font-semibold mb-2">Sketch</div>
+                <p className="text-blue-50 text-sm">Draw your ideas directly in the browser or upload your sketches</p>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 transform transition-all duration-300 hover:-translate-y-1 hover:bg-white/15">
+                <div className="text-cyan-200 text-lg font-semibold mb-2">Transform</div>
+                <p className="text-blue-50 text-sm">Our AI engine turns rough sketches into professional thumbnails</p>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 transform transition-all duration-300 hover:-translate-y-1 hover:bg-white/15">
+                <div className="text-cyan-200 text-lg font-semibold mb-2">Share</div>
+                <p className="text-blue-50 text-sm">Download and use your thumbnails on any platform</p>
+              </div>
+            </div>
+            
+            <div className="flex justify-center mt-10">
+              <div className="text-white/80 text-center max-w-md">
+                <p className="text-sm mb-2">Join thousands of content creators who have simplified their workflow</p>
+                <div className="flex space-x-2 justify-center">
+                  <span className="inline-block w-2 h-2 rounded-full bg-cyan-300"></span>
+                  <span className="inline-block w-2 h-2 rounded-full bg-blue-300"></span>
+                  <span className="inline-block w-2 h-2 rounded-full bg-purple-300"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating elements */}
+          <div className="absolute top-1/4 right-20 w-40 h-40 rounded-full bg-blue-200/60 blur-3xl auth-float"></div>
+          <div className="absolute bottom-1/4 left-20 w-48 h-48 rounded-full bg-purple-200/60 blur-3xl auth-float-delayed"></div>
         </div>
       </div>
 

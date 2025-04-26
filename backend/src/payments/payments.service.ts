@@ -11,12 +11,15 @@ import Stripe from 'stripe';
 export class PaymentsService {
   private stripeClient: any;
   private plans = {
-    Basic: this.configService.get<string>('BASIC_PRICE_ID')!,
-    Pro: this.configService.get<string>('PRO_PRICE_ID')!,
+    Weekly: this.configService.get<string>('WEEKLY_PRICE_ID')!,
+    Starter: this.configService.get<string>('STARTER_PRICE_ID')!,
+    Growth: this.configService.get<string>('GROWTH_PRICE_ID')!,
   };
-  private monthlyCredits = {
-    Basic: 50,
-    Pro: 'unlimited',
+  
+  private thumbnailLimits = {
+    Weekly: 20,
+    Starter: 50,
+    Growth: 100,
   };
   
   constructor(
@@ -30,7 +33,7 @@ export class PaymentsService {
     this.stripeClient = new Stripe(key, { apiVersion: '2025-02-24.acacia' });
   }
 
-  async createCheckoutSession(plan: planType, userId: string, subscriptionType: 'monthly' | 'yearly') {
+  async createCheckoutSession(plan: planType, userId: string, subscriptionType: 'weekly' | 'monthly') {
     const session = await this.stripeClient.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -79,7 +82,7 @@ export class PaymentsService {
       await this.userModel.findByIdAndUpdate(userId, {
         plan: plan,
         creditsUsed: 0,
-        monthlyCredits: this.monthlyCredits[plan],
+        monthlyThumbnailLimit: this.thumbnailLimits[plan],
         subscriptionType,
       });
     }

@@ -1,118 +1,139 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/model/UserSchema';
-import { GenerateDto } from './dto/generate.dto';
-import { GoogleGenAI } from '@google/genai';
-import { ThumbnailSettings } from 'src/types/interface';
+import OpenAI, { toFile } from 'openai';
 import axios from 'axios';
+import { GenerateDto } from './dto/generate.dto';
 
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
+  private readonly openaiApiKey: string;
+  private readonly openai: any;
   private readonly openRouterApiKey: string;
-  private readonly ai: any;
-
-  // Arrays for quality level descriptors
-  private qualityOptions: string[] = [
-    'standard definition', // 0
-    'enhanced quality', // 1
-    'full HD quality', // 2
-    'professional quality', // 3
-    'high-definition quality', // 4
-    'premium quality', // 5
-    'studio quality', // 6
-    'ultra HD quality', // 7
-    'broadcast quality', // 8
-    'cinematic quality', // 9
-  ];
 
   constructor(
     private configService: ConfigService,
     @InjectModel(User.name) private userModel: Model<User>,
   ) {
-    this.openRouterApiKey = this.configService.get<string>('OPENROUTER_API_KEY')!;
-    this.ai = new GoogleGenAI({
-      apiKey: this.configService.get<string>('GEMINI_API_KEY')!,
+    this.openaiApiKey = this.configService.get<string>('OPENAI_API_KEY')!;
+    this.openRouterApiKey =
+      this.configService.get<string>('OPENROUTER_API_KEY')!;
+
+    // Initialize OpenAI client
+    this.openai = new OpenAI({
+      apiKey: this.openaiApiKey,
     });
   }
 
   /**
-   * Generate thumbnail variations based on user input
+   * Generate thumbnail based on user input
    */
   async generate(data: GenerateDto, userEmail: string): Promise<string[]> {
     try {
+      // Extract the inputs from the data
+      const { prompt, sketch, targetPlatform } = data;
+
+      // Generate enhanced prompt using LLM
       const enhancedPrompt = await this.generateEnhancedPrompt(
-        data.prompt,
-        data.settings,
-        data.sketch,
+        prompt,
+        sketch,
+        targetPlatform,
       );
+
       this.logger.log(`Enhanced Thumbnail Prompt: ${enhancedPrompt}`);
 
-      const thumbnailVariations = await this.generateThumbnailImages(enhancedPrompt);
+      // Generate thumbnail image using the enhanced prompt and sketch
+      const thumbnailImage = await this.generateThumbnailImage(
+        enhancedPrompt,
+        sketch,
+      );
 
+      // Update user credits
       await this.updateUserCredits(userEmail);
 
-      return thumbnailVariations;
+      return [thumbnailImage]; // Return as array with single image for compatibility
     } catch (error) {
       this.logger.error(`Error in generate method: ${error.message}`);
-      throw new Error('Failed to generate thumbnail variations');
+      throw new BadRequestException('Failed to generate thumbnail');
     }
   }
 
+  /**
+   * Generate an enhanced prompt for thumbnail creation using LLM
+   */
   async generateEnhancedPrompt(
     prompt: string,
-    settings: ThumbnailSettings,
-    sketch: any,
+    sketch: string,
+    targetPlatform: string,
   ): Promise<string> {
-    const styleType = settings.style.enabled ? `Use the specified style: ${settings.style.type}.` : "Choose an appropriate style for the thumbnail.";
-    const colorScheme = settings.colors.enabled ? `Use the specified color scheme: ${settings.colors.scheme}.` : "Choose suitable colors that will engage viewers.";
-    const textContent = settings.text.enabled ? `Include the text "${settings.text.value}" positioned at ${settings.text.position}.` : "Do not include any text overlay.";
-    
-    // Get quality descriptor from the quality level
-    const qualityIndex = Math.min(Math.max(0, settings.quality.level || 5), this.qualityOptions.length - 1);
-    const qualityLevel = this.qualityOptions[qualityIndex];
-    
-    const dimensions = settings.dimensions.enabled 
-      ? `Create the thumbnail with dimensions ${settings.dimensions.width}x${settings.dimensions.height} with aspect ratio ${settings.dimensions.aspectRatio}.`
-      : "Create the thumbnail with standard YouTube dimensions (1280x720) with 16:9 aspect ratio.";
-    
-    const promptContent = `
-      Generate a compelling thumbnail based on the following instructions:
-      - Concept: ${prompt}
-      - ${styleType}
-      - ${colorScheme}
-      - ${textContent}
-      - Quality Level: ${qualityLevel}
-      - ${dimensions}
-      
-      The thumbnail should be visually striking, attention-grabbing, and clearly communicate the content's theme.
-      Ensure high contrast between elements for better visibility at small sizes.
-      Create a clean, professional look that will stand out in search results and recommended feeds.
-    `;
-  
-    const messages = [
-      {
-        role: 'system',
-        content: 'You are a specialized assistant that creates optimized thumbnail prompts for digital content.',
-      },
-      {
-        role: 'user',
-        content: [
-          { type: 'text', text: promptContent },
-          { type: 'image_url', image_url: { url: sketch } },
-        ],
-      },
-    ];
-  
-    console.log('Generated Prompt:', promptContent);
-  
     try {
+      // Determine dimensions based on target platform
+      let dimensions = '1280x720'; // Default dimensions
+      const platform = targetPlatform.toLowerCase();
+
+      if (platform.includes('youtube')) {
+        dimensions = '1280x720';
+      } else if (platform.includes('twitch')) { // Added Twitch
+        dimensions = '1280x720';
+      } else if (platform.includes('instagram')) { // Simplified Instagram
+        dimensions = '1280x720'; // Defaulting to 16:9 for general/video use
+      } else if (platform.includes('tiktok')) {
+        dimensions = '1080x1920'; // Vertical
+      } else if (platform.includes('linkedin')) {
+        dimensions = '1200x627';
+      } else if (platform.includes('twitter') || platform.includes('x.com')) {
+        dimensions = '1600x900';
+      }
+      // Removed Facebook and specific IG post/story/reel checks
+
+      // Create the prompt for the LLM
+      // Fixed template literal syntax
+      const promptContent = `Generate a detailed prompt for creating a compelling thumbnail image based on:
+
+USER’S REQUEST: \"${prompt}\"
+
+TARGET PLATFORM: ${targetPlatform}
+
+IMAGE DIMENSIONS: ${dimensions}
+
+GUIDELINES:
+1. Render everything in a hyper realistic style by default—unless the user explicitly requests another style.
+2. If the sketch includes an element (even as an emoji), interpret it as a real-world object or character in that realistic style.
+3. Follow the sketch exactly for composition, focal points, and layout.
+4. Use lighting, depth, and texture to make the scene feel three-dimensional and lifelike.
+5. Ensure the thumbnail:
+   - Is visually striking and attention-grabbing.
+   - Clearly communicates the content’s theme at a glance.
+   - Is optimized for ${targetPlatform} (e.g. color palette, framing).
+   - Maintains high contrast and readability at small sizes.
+   - Positions any required text in clear, uncluttered areas, with hierarchy and legibility in mind.
+
+Return ONLY the generated prompt text itself—no introductions, no markdown, no labels.`;
+
+      // Prepare the messages for the API request
+      const messages = [
+        {
+          role: 'system',
+          content:
+            'You are a specialized assistant that creates optimized thumbnail prompts for digital content. You only output the final prompt text, nothing else.', // Updated system prompt
+        },
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: promptContent },
+            { type: 'image_url', image_url: { url: sketch } },
+          ],
+        },
+      ];
+
+      // Make the API request to OpenRouter using Gemini model
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
         {
-          model: 'google/gemini-2.5-pro-exp-03-25:free',
+          model: 'google/gemini-2.0-flash-exp:free', // Consider trying other models if this one consistently adds extra text
           messages: messages,
         },
         {
@@ -124,96 +145,83 @@ export class AiService {
           },
         },
       );
-      
-      // Process the response
-      if (response.data && response.data.choices && response.data.choices[0]?.message?.content) {
-        const content = response.data.choices[0].message.content.trim();
-        
-        // If the content is JSON, try to extract the prompt field
-        if (content.startsWith('{') && content.includes('"prompt"')) {
-          try {
-            const jsonContent = JSON.parse(content);
-            if (jsonContent.prompt) {
-              return jsonContent.prompt;
-            }
-          } catch (jsonError) {
-            this.logger.warn(`Failed to parse JSON response: ${jsonError.message}`);
-          }
-        }
-        
-        return content;
-      }
-      
-      // Fallback if response structure doesn't match expectations
-      this.logger.warn('Unexpected API response structure. Using original prompt.');
-      return promptContent.replace(/\n\s*/g, ' ').trim();
+
+      return response.data.choices[0].message.content;
     } catch (error) {
-      this.logger.error(`Error in generateEnhancedPrompt: ${error.message}`);
-      // Fallback to the original prompt if API call fails
-      return promptContent.replace(/\n\s*/g, ' ').trim();
+      throw Error(error)
     }
   }
-  
-  async generateThumbnailImages(prompt: string): Promise<string[]> {
+
+  /**
+   * Generate thumbnail image using the enhanced prompt and sketch
+   */
+  async generateThumbnailImage(
+    prompt: string,
+    sketch: string,
+  ): Promise<string> {
     try {
-      const results: string[] = [];
-      
-      // Generate 4 different thumbnail variations
-      for (let i = 0; i < 4; i++) {
-        try {
-          const result = await this.ai.models.generateContent({
-            model: 'gemini-2.0-flash-exp-image-generation',
-            contents: prompt + ` (Variation ${i + 1}: Make this unique from other variations)`,
-            config: {
-              responseModalities: ['Text', 'Image'],
-            },
-          });
-          
-          if (!result || !result.candidates || result.candidates.length === 0) {
-            this.logger.error(`Empty or invalid response from image generation API for thumbnail #${i+1}`);
-            continue;
-          }
-          
-          for (const part of result.candidates[0].content.parts) {
-            if (part.inlineData) {
-              results.push(part.inlineData.data);
-              break; // We only need one image per API call
-            }
-          }
-        } catch (error) {
-          this.logger.error(`Error generating thumbnail #${i+1}: ${error.message}`);
-          // Continue with other thumbnail generations even if one fails
-        }
+      // Process the sketch image for OpenAI
+      let imageData = sketch;
+      if (sketch.startsWith('data:image')) {
+        imageData = sketch.split(',')[1]; // Extract base64 data without the prefix
       }
-      
-      if (results.length === 0) {
-        throw new Error('Failed to generate any thumbnail images');
-      }
-      
-      return results;
+
+      // Convert the base64 image to a file for the OpenAI API
+      const buffer = Buffer.from(imageData, 'base64');
+      const imageFile = await toFile(buffer, 'sketch-image.png', {
+        type: 'image/png',
+      });
+
+      // const response = await this.openai.images.edit({
+      //   model: 'gpt-image-1',
+      //   image: imageFile,
+      //   prompt: prompt,
+      //   quality: 'high',
+      // });
+
+      // return response.data[0].b64_json;
+      return ""
     } catch (error) {
-      this.logger.error(`Error generating thumbnail images: ${error.message}`, error.stack);
-      throw new Error(`Failed to generate thumbnail images: ${error.message}`);
+      this.logger.error(
+        `Error generating thumbnail image: ${error.message}`,
+        error.stack,
+      );
+      throw new Error(`Failed to generate thumbnail image: ${error.message}`);
     }
   }
-  
+  /**
+   * Update user credits after generating thumbnails
+   */
   private async updateUserCredits(userEmail: string): Promise<void> {
     try {
       const userInfo = await this.userModel.findOne({ email: userEmail });
-      
+
       if (!userInfo) {
         this.logger.warn(`User not found: ${userEmail}`);
         throw new Error(`User not found: ${userEmail}`);
       }
-      
-      await this.userModel.updateOne(
+
+      // Ensure creditsUsed field exists or initialize if necessary before incrementing
+      const updateResult = await this.userModel.updateOne(
         { email: userEmail },
         { $inc: { creditsUsed: 1 } },
+        { upsert: false },
       );
-      
-      this.logger.log(`Credits updated successfully for user: ${userEmail}`);
+
+      if (updateResult.matchedCount === 0) {
+        this.logger.warn(`User not found during update attempt: ${userEmail}`);
+        throw new Error(`User not found during update attempt: ${userEmail}`);
+      }
+      if (updateResult.modifiedCount === 0) {
+        this.logger.warn(`Credits not updated for user (no modification): ${userEmail}`);
+      } else {
+        this.logger.log(`Credits updated successfully for user: ${userEmail}`);
+      }
     } catch (error) {
-      this.logger.error(`Error updating user credits: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error updating user credits: ${error.message}`,
+        error.stack,
+      );
       throw new Error(`Failed to update user credits: ${error.message}`);
     }
   }

@@ -19,29 +19,16 @@ export class SubscriptionGuard implements CanActivate {
     
     const userPlan = user.plan;
     const userUsage = user.creditsUsed;
-    const userMonthlyCredits = user.monthlyCredits;
+    const userMonthlyThumbnailLimit = user.monthlyThumbnailLimit;
     
-    // Check if user has exceeded their credit limit
-    const usageExceeded = userMonthlyCredits === 'unlimited' ? 
-      false : 
-      userUsage >= Number(userMonthlyCredits);
-    
-    if (!userPlan) {
-      throw new UnauthorizedException("You don't have a subscription plan");
+    // Check if user has a valid paid plan (Weekly, Starter, or Growth)
+    if (!['Weekly', 'Starter', 'Growth'].includes(userPlan)) {
+      throw new UnauthorizedException("You need a subscription plan to access this feature");
     }
     
-    if (userPlan === 'none') {
-      throw new UnauthorizedException('You do not have a subscription plan');
-    }
-    
-    if (userPlan === 'free' && usageExceeded) {
-      await this.userModel.findByIdAndUpdate(userId, { plan: 'none' });
-      throw new UnauthorizedException('Free plan limit reached. Please upgrade your plan.');
-    }
-    
-    if (userPlan === 'Basic' && usageExceeded) {
-      await this.userModel.findByIdAndUpdate(userId, { plan: 'none' });
-      throw new UnauthorizedException('Basic plan limit reached. Please upgrade to Pro.');
+    // Check if user has exceeded their thumbnail limit based on their plan
+    if (userUsage >= Number(userMonthlyThumbnailLimit)) {
+      throw new UnauthorizedException(`Your ${userPlan} plan limit of ${userMonthlyThumbnailLimit} thumbnails has been reached. Please upgrade your plan for more thumbnails.`);
     }
 
     return true;
