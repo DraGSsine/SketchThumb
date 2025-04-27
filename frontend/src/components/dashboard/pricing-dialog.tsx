@@ -48,8 +48,8 @@ const PricingCard: React.FC<PricingCardProps> = ({
             <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center transform transition-transform duration-500 hover:rotate-12 ${
               plan.popular ? "bg-blue-600/30 text-white" : "bg-blue-50 text-blue-600"
             }`}>
-              {plan.name === "Starter" ? <Fire className="w-6 h-6" /> :
-               plan.name === "Growth" ? <Bolt className="w-6 h-6" iconSecondary='#fff' iconPrimary='#fff' /> :
+              {plan.name === "Starter" ? <Fire className="w-6 h-6" iconSecondary='#fff' iconPrimary='#fff'/> :
+               plan.name === "Growth" ? <Bolt className="w-6 h-6"  /> :
                <Gem className="w-6 h-6" />}
             </div>
 

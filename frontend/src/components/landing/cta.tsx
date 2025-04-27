@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "../../../public/icons/SvgIcons";
 import Image from "next/image";
+import Link from "next/link";
 
 const CTA = () => {
   return (
@@ -17,13 +17,13 @@ const CTA = () => {
                 Transform your rough sketches into eye-catching thumbnails that capture attention. Make your content stand out with professional-looking thumbnails.
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
-                <Button className="bg-blue-600 text-white hover:bg-blue-700 transition-colors">
-                  <span>Start Free Trial</span>
-                  <ArrowRight className="ml-2 h-4 w-4"  iconPrimary="#fff" iconSecondary="#fff"/>
-                </Button>
-                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors">
-                  View Examples
-                </Button>
+              <Link
+                href="/auth/signup"
+                className="flex items-center justify-center gap-2 bg-blue-500 border-none text-white px-7 py-4 text-lg rounded-xl shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/20 font-semibold transition-all duration-200"
+                >
+                Get Started
+                <ArrowRight className="h-5 w-5" iconPrimary="#fff" iconSecondary="#fff" />
+                </Link>
               </div>
             </div>
             <div className="lg:col-span-2 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>

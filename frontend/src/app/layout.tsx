@@ -11,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "scrive| Sketch toThumbnail Converter",
+    default: "scrive | Sketch toThumbnail Converter",
     template: "%s | scrive- Sketch toThumbnail AI Tool",
   },
   description:
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "http://localhost:3000",
     siteName: "scrive- Sketch toThumbnail Converter",
-    title: "scrive| Transform Sketches into ProfessionalThumbnails",
+    title: "scrive | Transform Sketches into ProfessionalThumbnails",
     description:
       "Turn your sketches and images into professionalThumbnails with SketchThumb. Our AI-powered tool helps you create stunningThumbnails from your design ideas quickly and efficiently.",
     images: [
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "scrive| AI-Powered Sketch toThumbnail Converter",
+    title: "scrive | AI-Powered Sketch toThumbnail Converter",
     description:
       "Transform your sketches and images into professionalThumbnails with SketchThumb. Create stunning brand identities with our AI-powered conversion tool.",
     creator: "@yassin_ouchen",

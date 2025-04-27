@@ -69,7 +69,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
             
             <div className="flex justify-center mt-10">
               <div className="text-white/80 text-center max-w-md">
-                <p className="text-sm mb-2">Join thousands of content creators who have simplified their workflow</p>
+                <p className="text-sm mb-2">Simplify your workflow and create stunning thumbnails effortlessly</p>
                 <div className="flex space-x-2 justify-center">
                   <span className="inline-block w-2 h-2 rounded-full bg-cyan-300"></span>
                   <span className="inline-block w-2 h-2 rounded-full bg-blue-300"></span>

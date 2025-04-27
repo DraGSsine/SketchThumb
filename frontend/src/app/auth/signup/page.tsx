@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader, Lock, Envelope, User }  from "../../../../public/icons/SvgIcons";
 import GoogleAuthButton from "../GoogleAuthButton";
 import { z } from "zod";
 import { useState } from "react";
@@ -19,6 +18,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Loader, Lock, MailIcon, User2 } from "lucide-react";
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
@@ -185,7 +185,7 @@ export default function SignupPage() {
                         }`}
                         required
                       />
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <User2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                     </div>
                     {errors.displayname && (
                       <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -216,7 +216,7 @@ export default function SignupPage() {
                             : ""
                         }`}
                       />
-                      <Envelope className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                     </div>
                     {errors.email && (
                       <p className="text-red-500 text-xs sm:text-sm mt-1">

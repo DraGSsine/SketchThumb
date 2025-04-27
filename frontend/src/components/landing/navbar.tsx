@@ -54,7 +54,7 @@ const Navbar = () => {
                 </Button>
               </Link>
               <Link href="/auth/signup">
-                <Button className="bg-blue-600">Get Started</Button>
+                <Button className="bg-blue-500 text-white">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -79,7 +79,6 @@ const Navbar = () => {
           <div className="container mx-auto px-4 py-4">
             <div className="space-y-3 mb-4">
               {[
-                { name: "Home", href: "/" },
                 { name: "Pricing", href: "/#pricing" },
                 { name: "FAQ", href: "/#faq" },
                 { name: "Privacy", href: "/privacy" },

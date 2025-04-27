@@ -10,18 +10,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { 
-  Image as ImageIcon,
-  RotateReverse,
-  Sparkles,
-  Download,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Maximize
-} from "../../../public/icons/SvgIcons";
+
 import { useUserInfo } from "@/lib/queries";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight, Download, ImageIcon, Loader, Maximize, X } from 'lucide-react';
 
 // Constants for localStorage keys
 const TARGET_PLATFORM_STORAGE_KEY = "thumbnail-generator-target-platform";
@@ -51,6 +43,7 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [currentPreviewImage, setCurrentPreviewImage] = useState<string | null>(null);
+  const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
 
   const [targetPlatform, setTargetPlatform] = useState<string>("youtube");
 
@@ -72,6 +65,24 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
   useEffect(() => {
     localStorage.setItem(TARGET_PLATFORM_STORAGE_KEY, targetPlatform);
   }, [targetPlatform]);
+
+  useEffect(() => {
+    // Reset image loading states when new images are generated
+    if (images.length > 0) {
+      const newLoadingStates: Record<number, boolean> = {};
+      images.forEach((_, index) => {
+        newLoadingStates[index] = false;
+      });
+      setImagesLoaded(newLoadingStates);
+    }
+  }, [images]);
+
+  const handleImageLoad = (index: number) => {
+    setImagesLoaded(prev => ({
+      ...prev,
+      [index]: true
+    }));
+  };
 
   const getRightSidebarWidth = () => {
     if (!isMounted) return "30%";
@@ -138,6 +149,8 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
   };
 
   const handleGenerate = async () => {
+    if (!promptText.trim()) return;
+    
     setIsGenerating(true);
 
     try {
@@ -219,7 +232,18 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
                   {isGenerating && (
                     <div className="aspect-video mb-3">
                       <div className="relative w-full h-full bg-gray-100 rounded-lg overflow-hidden">
-                        <Skeleton variant="blob" className="w-full h-full" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-full h-full">
+                            <div className="animate-pulse flex flex-col h-full">
+                              <div className="rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 h-full w-full flex items-center justify-center">
+                                <Loader className="w-10 h-10 text-gray-400 animate-spin" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-1 shadow-lg">
+                            <span className="text-sm font-medium text-gray-600">Generating thumbnail...</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -231,12 +255,24 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
                         onClick={() => handleImageClick(images[selectedImage], selectedImage)}
                       >
                         <div className="relative w-full h-full">
+                          {!imagesLoaded[selectedImage] && (
+                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-100">
+                              <div className="animate-pulse flex flex-col h-full w-full">
+                                <div className="rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 h-full w-full flex items-center justify-center">
+                                  <Loader className="w-8 h-8 text-gray-400 animate-spin" />
+                                </div>
+                              </div>
+                            </div>
+                          )}
                           <Image
                             layout="fill"
                             objectFit="contain"
                             src={images[selectedImage]}
                             alt={`Generated Thumbnail ${selectedImage + 1}`}
-                            className="p-1"
+                            className={cn("p-1", 
+                              !imagesLoaded[selectedImage] ? "opacity-0" : "opacity-100 transition-opacity duration-300"
+                            )}
+                            onLoad={() => handleImageLoad(selectedImage)}
                           />
                           <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
                             <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
@@ -260,12 +296,22 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
                               onClick={() => handleImageClick(image, index)}
                             >
                               <div className="relative w-full h-full">
+                                {!imagesLoaded[index] && (
+                                  <div className="absolute inset-0 z-10 bg-gray-100">
+                                    <div className="animate-pulse flex h-full">
+                                      <div className="rounded-md bg-gradient-to-r from-gray-200 to-gray-300 h-full w-full" />
+                                    </div>
+                                  </div>
+                                )}
                                 <Image
                                   layout="fill"
                                   objectFit="contain"
                                   src={image}
                                   alt={`Thumbnail variant ${index + 1}`}
-                                  className="p-0.5"
+                                  className={cn("p-0.5", 
+                                    !imagesLoaded[index] ? "opacity-0" : "opacity-100 transition-opacity duration-300"
+                                  )}
+                                  onLoad={() => handleImageLoad(index)}
                                 />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                                   <div className="bg-white/80 rounded-full p-1 shadow-sm">
@@ -329,18 +375,21 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
                 </div>
 
                 <Button
-                  className="w-full py-6 font-semibold text-zinc-50 rounded-lg transition-all flex items-center justify-center gap-2 text-sm shadow-sm bg-blue-500 "
+                  className={cn(
+                    "w-full py-6 font-semibold text-zinc-50 rounded-lg transition-all flex items-center justify-center gap-2 text-sm shadow-sm",
+                    promptText.trim() ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-300 cursor-not-allowed"
+                  )}
                   variant="default"
                   onClick={handleGenerate}
-                  disabled={isGenerating}
+                  disabled={isGenerating || !promptText.trim()}
                 >
                   {isGenerating ? (
                     <>
-                      <RotateReverse iconPrimary='#fff' iconSecondary='#fff' className="w-4 h-4 animate-spin" /> Generating...
+                      <Loader className="w-4 h-4 animate-spin" /> Generating...
                     </>
                   ) : (
                     <>
-                      <Sparkles iconPrimary='#fff' iconSecondary='#fff' className="w-4 h-4" /> Generate Thumbnail
+                      Generate Thumbnail
                     </>
                   )}
                 </Button>
@@ -393,14 +442,26 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
               )}
               <div className="relative w-full h-full flex items-center justify-center">
                 {currentPreviewImage && (
-                  <Image
-                    src={currentPreviewImage}
-                    alt="Preview"
-                    className="object-contain max-w-full max-h-full rounded-md shadow-sm"
-                    width={1920}
-                    height={1080}
-                    priority
-                  />
+                  <>
+                    <div className={cn("absolute inset-0 flex items-center justify-center", 
+                      imagesLoaded[selectedImage] ? "opacity-0" : "opacity-100"
+                    )}>
+                      <div className="animate-pulse flex items-center justify-center">
+                        <Loader className="h-10 w-10 text-gray-400 animate-spin" />
+                      </div>
+                    </div>
+                    <Image
+                      src={currentPreviewImage}
+                      alt="Preview"
+                      className={cn("object-contain max-w-full max-h-full rounded-md shadow-sm transition-opacity duration-300", 
+                        imagesLoaded[selectedImage] ? "opacity-100" : "opacity-0"
+                      )}
+                      width={1920}
+                      height={1080}
+                      priority
+                      onLoad={() => handleImageLoad(selectedImage)}
+                    />
+                  </>
                 )}
               </div>
             </div>
@@ -413,7 +474,7 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
                 className="bg-blue-600 hover:bg-blue-700 text-white gap-2 px-4 py-2 rounded-md text-sm font-medium shadow-sm"
                 disabled={!currentPreviewImage}
               >
-                <Download iconPrimary='#fff' iconSecondary='#fff'/>
+                <Download />
                 Download
               </Button>
             </div>
@@ -424,22 +485,5 @@ const Sidebar = ({ showSidebar, isMobile, isMounted }: SidebarProps) => {
   );
 };
 
-const Skeleton = ({
-  variant,
-  className,
-}: {
-  variant: "blob";
-  className?: string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-gray-300/20 before:to-transparent",
-        variant === "blob" && "bg-gray-200",
-        className
-      )}
-    />
-  );
-};
 
 export default Sidebar;

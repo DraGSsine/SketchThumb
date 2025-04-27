@@ -11,7 +11,7 @@ import { AxiosError } from "axios";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { api } from "@/lib/axios";
-import { Loader, Lock, Envelope } from "../../../../public/icons/SvgIcons";
+import { Loader, Lock, Mail } from "lucide-react";
 
 const signinSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -130,7 +130,7 @@ export default function SigninPage() {
                         : ""
                     }`}
                   />
-                  <Envelope className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 </div>
                 {errors.email && (
                   <p className="text-red-500 text-xs sm:text-sm mt-1">

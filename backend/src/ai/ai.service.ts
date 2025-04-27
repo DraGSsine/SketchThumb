@@ -39,7 +39,6 @@ export class AiService {
       // Generate enhanced prompt using LLM
       const enhancedPrompt = await this.generateEnhancedPrompt(
         prompt,
-        sketch,
         targetPlatform,
       );
 
@@ -66,7 +65,6 @@ export class AiService {
    */
   async generateEnhancedPrompt(
     prompt: string,
-    sketch: string,
     targetPlatform: string,
   ): Promise<string> {
     try {
@@ -76,64 +74,51 @@ export class AiService {
 
       if (platform.includes('youtube')) {
         dimensions = '1280x720';
-      } else if (platform.includes('twitch')) { // Added Twitch
+      } else if (platform.includes('twitch')) {
         dimensions = '1280x720';
-      } else if (platform.includes('instagram')) { // Simplified Instagram
-        dimensions = '1280x720'; // Defaulting to 16:9 for general/video use
+      } else if (platform.includes('instagram')) {
+        dimensions = '1280x720';
       } else if (platform.includes('tiktok')) {
-        dimensions = '1080x1920'; // Vertical
+        dimensions = '1080x1920';
       } else if (platform.includes('linkedin')) {
         dimensions = '1200x627';
       } else if (platform.includes('twitter') || platform.includes('x.com')) {
         dimensions = '1600x900';
       }
-      // Removed Facebook and specific IG post/story/reel checks
 
-      // Create the prompt for the LLM
-      // Fixed template literal syntax
-      const promptContent = `Generate a detailed prompt for creating a compelling thumbnail image based on:
+      // Improved prompt template for LLM
+      const promptContent = `Analyze the following user prompt and target platform. Extract or infer the following details: [topic], [main subject or scene], [text overlay], [style], [colors], and [emotion].
 
-USER’S REQUEST: \"${prompt}\"
+Then, generate a single, high-quality image generation prompt using this template:
 
+Turn this sketch into a high-resolution ${targetPlatform} thumbnail (${dimensions} pixels) for a video about [topic]. The thumbnail should prominently feature [main subject or scene], with the text '[text overlay]' clearly visible and easy to read. Use a [style] style and a color scheme that includes [colors]. The overall image should be vibrant, attention-grabbing, and convey a sense of [emotion]. Ensure the text is large enough to be readable even at small sizes, and that there’s good contrast between the text and the background.
+
+USER'S ORIGINAL PROMPT: "${prompt}"
 TARGET PLATFORM: ${targetPlatform}
+SUGGESTED IMAGE DIMENSIONS: ${dimensions}
 
-IMAGE DIMENSIONS: ${dimensions}
+Instructions:
+- If the user's prompt already specifies any of the details, use them directly.
+- If not, infer reasonable values based on the topic and platform.
+- If the style is not specified, default to 'hyper realistic'.
+- Output ONLY the final, filled-in prompt as a single sentence, with all placeholders replaced. Do not include explanations, markdown, or extra text.`;
 
-GUIDELINES:
-1. Render everything in a hyper realistic style by default—unless the user explicitly requests another style.
-2. If the sketch includes an element (even as an emoji), interpret it as a real-world object or character in that realistic style.
-3. Follow the sketch exactly for composition, focal points, and layout.
-4. Use lighting, depth, and texture to make the scene feel three-dimensional and lifelike.
-5. Ensure the thumbnail:
-   - Is visually striking and attention-grabbing.
-   - Clearly communicates the content’s theme at a glance.
-   - Is optimized for ${targetPlatform} (e.g. color palette, framing).
-   - Maintains high contrast and readability at small sizes.
-   - Positions any required text in clear, uncluttered areas, with hierarchy and legibility in mind.
-
-Return ONLY the generated prompt text itself—no introductions, no markdown, no labels.`;
-
-      // Prepare the messages for the API request
       const messages = [
         {
           role: 'system',
           content:
-            'You are a specialized assistant that creates optimized thumbnail prompts for digital content. You only output the final prompt text, nothing else.', // Updated system prompt
+            'You are a specialized assistant that transforms user prompts into highly effective, structured prompts for image generation AIs, specifically for thumbnails. You only output the final enhanced prompt text, nothing else.',
         },
         {
           role: 'user',
-          content: [
-            { type: 'text', text: promptContent },
-            { type: 'image_url', image_url: { url: sketch } },
-          ],
+          content: promptContent,
         },
       ];
 
-      // Make the API request to OpenRouter using Gemini model
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
         {
-          model: 'google/gemini-2.0-flash-exp:free', // Consider trying other models if this one consistently adds extra text
+          model: 'google/gemini-2.0-flash-exp:free',
           messages: messages,
         },
         {
@@ -148,7 +133,8 @@ Return ONLY the generated prompt text itself—no introductions, no markdown, no
 
       return response.data.choices[0].message.content;
     } catch (error) {
-      throw Error(error)
+      this.logger.error(`Error generating enhanced prompt: ${error.message}`, error.stack);
+      throw new Error(`Failed to generate enhanced prompt: ${error.message}`);
     }
   }
 
@@ -160,27 +146,14 @@ Return ONLY the generated prompt text itself—no introductions, no markdown, no
     sketch: string,
   ): Promise<string> {
     try {
-      // Process the sketch image for OpenAI
-      let imageData = sketch;
-      if (sketch.startsWith('data:image')) {
-        imageData = sketch.split(',')[1]; // Extract base64 data without the prefix
-      }
-
-      // Convert the base64 image to a file for the OpenAI API
-      const buffer = Buffer.from(imageData, 'base64');
-      const imageFile = await toFile(buffer, 'sketch-image.png', {
-        type: 'image/png',
-      });
-
-      // const response = await this.openai.images.edit({
-      //   model: 'gpt-image-1',
-      //   image: imageFile,
-      //   prompt: prompt,
-      //   quality: 'high',
-      // });
-
-      // return response.data[0].b64_json;
-      return ""
+      // For testing: load a sample image from the public folder and return as base64
+      const fs = require('fs');
+      const path = require('path');
+      const imagePath = path.join(__dirname, '../../public/result.png');
+      console.log("--->",imagePath)
+      const imageBuffer = fs.readFileSync(imagePath);
+      const base64Image = imageBuffer.toString('base64');
+      return `data:image/png;base64,${base64Image}`;
     } catch (error) {
       this.logger.error(
         `Error generating thumbnail image: ${error.message}`,
@@ -189,6 +162,7 @@ Return ONLY the generated prompt text itself—no introductions, no markdown, no
       throw new Error(`Failed to generate thumbnail image: ${error.message}`);
     }
   }
+
   /**
    * Update user credits after generating thumbnails
    */
