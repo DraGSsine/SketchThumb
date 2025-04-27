@@ -11,7 +11,7 @@ import {
   Pencil,
   PenNib,
   Shapes,
-  Palette,
+  Ruler,
   Trash,
   RotateLeft,
   Text, // Import the Type icon
@@ -276,7 +276,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                           <ToolButton
                             isActive={false}
                             onClick={toggleStrokeOptions}
-                            icon={<Palette className="w-4 h-4 sm:w-5 sm:h-5" iconPrimary="#1E3050" iconSecondary="#1E305030"/>}
+                            icon={<Ruler className="w-4 h-4 sm:w-5 sm:h-5" iconPrimary="#1E3050" iconSecondary="#1E305030"/>}
                           />
                         </div>
                       </PopoverTrigger>

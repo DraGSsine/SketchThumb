@@ -146,14 +146,26 @@ Instructions:
     sketch: string,
   ): Promise<string> {
     try {
-      // For testing: load a sample image from the public folder and return as base64
-      const fs = require('fs');
-      const path = require('path');
-      const imagePath = path.join(__dirname, '../../public/result.png');
-      console.log("--->",imagePath)
-      const imageBuffer = fs.readFileSync(imagePath);
-      const base64Image = imageBuffer.toString('base64');
-      return `data:image/png;base64,${base64Image}`;
+      // Process the sketch image for OpenAI
+      let imageData = sketch;
+      if (sketch.startsWith('data:image')) {
+        imageData = sketch.split(',')[1]; // Extract base64 data without the prefix
+      }
+
+      // Convert the base64 image to a file for the OpenAI API
+      const buffer = Buffer.from(imageData, 'base64');
+      const imageFile = await toFile(buffer, 'sketch-image.png', {
+        type: 'image/png',
+      });
+
+      const response = await this.openai.images.edit({
+        model: 'gpt-image-1',
+        image: imageFile,
+        prompt: prompt,
+        quality: 'high',
+      });
+
+      return response.data[0].b64_json;
     } catch (error) {
       this.logger.error(
         `Error generating thumbnail image: ${error.message}`,
@@ -200,3 +212,5 @@ Instructions:
     }
   }
 }
+
+
