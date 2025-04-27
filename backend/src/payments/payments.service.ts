@@ -15,13 +15,13 @@ export class PaymentsService {
     Starter: this.configService.get<string>('STARTER_PRICE_ID')!,
     Growth: this.configService.get<string>('GROWTH_PRICE_ID')!,
   };
-  
+
   private thumbnailLimits = {
     Weekly: 20,
     Starter: 50,
     Growth: 100,
   };
-  
+
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private configService: ConfigService,
@@ -33,7 +33,11 @@ export class PaymentsService {
     this.stripeClient = new Stripe(key, { apiVersion: '2025-02-24.acacia' });
   }
 
-  async createCheckoutSession(plan: planType, userId: string, subscriptionType: 'weekly' | 'monthly') {
+  async createCheckoutSession(
+    plan: planType,
+    userId: string,
+    subscriptionType: 'weekly' | 'monthly',
+  ) {
     const session = await this.stripeClient.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -57,34 +61,42 @@ export class PaymentsService {
   }
 
   async stripeWebhook(req: any, res: Response) {
-    const sig = req.headers['stripe-signature'];
-    const key = this.configService.get<string>('STRIPE_WEBHOOK_SECRET');
-    if (!key) {
-      throw new Error('Missing Stripe webhook secret');
-    }
-    
-    let event: Stripe.Event;
     try {
-      event = this.stripeClient.webhooks.constructEvent(req.rawBody, sig, key);
-    } catch (err) {
-      console.log(err);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
+      const sig = req.headers['stripe-signature'];
+      const key = this.configService.get<string>('STRIPE_WEBHOOK_SECRET');
+      if (!key) {
+        throw new Error('Missing Stripe webhook secret');
+      }
 
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const userId = session.metadata?.userId;
-      const plan = session.metadata?.plan;
-      const subscriptionType = session.metadata?.subscriptionType;
-      if (!plan) return res.status(400).send('Plan not found');
-      if (!userId) return res.status(400).send('User ID not found');
-      
-      await this.userModel.findByIdAndUpdate(userId, {
-        plan: plan,
-        creditsUsed: 0,
-        monthlyThumbnailLimit: this.thumbnailLimits[plan],
-        subscriptionType,
-      });
+      let event: Stripe.Event;
+      try {
+        event = this.stripeClient.webhooks.constructEvent(
+          req.rawBody,
+          sig,
+          key,
+        );
+      } catch (err) {
+        console.log(err);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+      }
+
+      if (event.type === 'checkout.session.completed') {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const userId = session.metadata?.userId;
+        const plan = session.metadata?.plan;
+        const subscriptionType = session.metadata?.subscriptionType;
+        if (!plan) return res.status(400).send('Plan not found');
+        if (!userId) return res.status(400).send('User ID not found');
+
+        await this.userModel.findByIdAndUpdate(userId, {
+          plan: plan,
+          creditsUsed: 0,
+          monthlyThumbnailLimit: this.thumbnailLimits[plan],
+          subscriptionType,
+        });
+      }
+    } catch (error) {
+      throw Error(error);
     }
   }
 }

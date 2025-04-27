@@ -94,8 +94,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://sketchtothumbnail.com',
-      'https://www.sketchtothumbnail.com',
+      'https://scrive.pro',
+      'https://www.scrive.pro',
     ],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

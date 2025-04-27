@@ -16,7 +16,7 @@ export class MailService {
 
   async sendOtp(email: string, otp: string) {
     const { data, error } = await this.resend.emails.send({
-      from: 'noreply@sketchtothumbnail.com',
+      from: 'noreply@scrive.pro',
       to: [email],
       subject: 'Your Verification Code',
       html: `

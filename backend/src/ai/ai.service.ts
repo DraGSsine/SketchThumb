@@ -125,8 +125,8 @@ Instructions:
           headers: {
             Authorization: `Bearer ${this.openRouterApiKey}`,
             'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://sketchtothumbnail.com',
-            'X-Title': 'SketchToThumbnail',
+            'HTTP-Referer': 'https://scrive.pro',
+            'X-Title': 'scrive',
           },
         },
       );

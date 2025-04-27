@@ -102,12 +102,31 @@ export default function DashboardPage() {
               variant="ghost"
               size="icon"
               onClick={() => setShowRightSidebar(!showRightSidebar)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-white shadow-md rounded-l-lg border border-r-0 border-gray-200 h-16 w-8"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-50 bg-white  shadow-md rounded-l-lg border border-blue-300 h-16 w-8"
             >
               {showRightSidebar ? 
                 <ChevronRight className="h-6 w-6 text-blue-600" /> : 
                 <ChevronLeft className="h-6 w-6 text-blue-600" />
               }
+            </Button>
+          </div>
+
+          {/* Toggle for right sidebar - visible on mobile - Mimic desktop style and position */}
+          <div className="md:hidden fixed top-1/2 right-0 -translate-y-1/2 z-30">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                console.log('Mobile toggle clicked. Current state:', showRightSidebar, 'New state:', !showRightSidebar);
+                setShowRightSidebar(!showRightSidebar);
+              }}
+              className="bg-white shadow-md rounded-l-lg border border-blue-300 border-r-0 h-16 w-8 flex items-center justify-center"
+            >
+              {showRightSidebar ? (
+                <ChevronRight className="h-6 w-6 text-blue-600" /> // Show Right chevron when open
+              ) : (
+                <ChevronLeft className="h-6 w-6 text-blue-600" /> // Show Left chevron when closed
+              )}
             </Button>
           </div>
 
