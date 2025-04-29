@@ -61,7 +61,7 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* Right column: YouTube Video */}
+          {/* Right column: Video */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -71,16 +71,17 @@ const Hero = () => {
             <div className="w-full max-w-2xl mx-auto shadow-2xl rounded-2xl overflow-hidden">
               <div className="relative w-full aspect-[16/9] bg-gradient-to-br from-gray-900 to-gray-800 p-1 md:p-3">
                 <div className="w-full h-full rounded-xl overflow-hidden">
-                  <iframe 
+                  <video
+                    autoPlay
                     width="100%" 
                     height="100%" 
-                    src="https://www.youtube.com/embed/uHU5Dou93DA" 
+                    controls 
+                    src="https://res.cloudinary.com/decb9vsza/video/upload/v1745953124/yjz4mrydwg1n5peh390u.mp4" 
                     title="Scrive Demo" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
                     className="absolute top-0 left-0 w-full h-full"
-                  ></iframe>
+                  >
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               </div>
             </div>

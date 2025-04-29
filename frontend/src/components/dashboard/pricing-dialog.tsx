@@ -170,7 +170,7 @@ const SubscriptionDialog = () => {
       period: "/week",
       description: "Perfect for getting started",
       features: [
-        "20 sketch to thumbnail conversions per week",
+        "20 thumbnail per week",
         "High-quality thumbnails",
         "24/7 support",
         "High resolution downloads",
@@ -186,7 +186,7 @@ const SubscriptionDialog = () => {
       period: "/month",
       description: "Ideal for small creators",
       features: [
-        "50 sketch to thumbnail conversions per month",
+        "50 thumbnail per month",
         "High-quality thumbnails",
         "24/7 support",
         "High resolution downloads",
@@ -203,7 +203,7 @@ const SubscriptionDialog = () => {
       period: "/month",
       description: "Best for growing channels",
       features: [
-        "100 sketch to thumbnail conversions per month",
+        "100 thumbnail per month",
         "High-quality thumbnails",
         "24/7 support",
         "High resolution downloads",

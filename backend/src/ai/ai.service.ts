@@ -6,6 +6,8 @@ import { User } from 'src/model/UserSchema';
 import OpenAI, { toFile } from 'openai';
 import axios from 'axios';
 import { GenerateDto } from './dto/generate.dto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class AiService {
@@ -33,13 +35,44 @@ export class AiService {
    */
   async generate(data: GenerateDto, userEmail: string): Promise<string[]> {
     try {
+      // Check for PRODUCTION_TEST env variable
+      const isProductionTest = this.configService.get<string>('PRODUCTION_TEST') === 'true';
+      if (isProductionTest) {
+          console.log('Waiting 60 seconds…');
+          await new Promise(r => setTimeout(r, 60000));
+          console.log('Done!');
+        
+        // Read result.png from public folder and return as base64
+        const imagePath = path.join(process.cwd(), 'public', 'result.png');
+        const imageBuffer = fs.readFileSync(imagePath);
+        const base64Image = imageBuffer.toString('base64');
+        // Return as array for compatibility
+        return [base64Image];
+      }
+
       // Extract the inputs from the data
       const { prompt, sketch, targetPlatform } = data;
+      let size = '1024x1024'; // Default square
+      const platform = targetPlatform.toLowerCase();
 
+      if (
+        platform.includes('youtube') ||
+        platform.includes('twitch') ||
+        platform.includes('twitter') ||
+        platform.includes('x.com') ||
+        platform.includes('linkedin')
+      ) {
+        size = '1536x1024'; // landscape
+      } else if (platform.includes('instagram')) {
+        size = '1024x1024'; // square
+      } else if (platform.includes('tiktok')) {
+        size = '1024x1536'; // portrait
+      }
       // Generate enhanced prompt using LLM
       const enhancedPrompt = await this.generateEnhancedPrompt(
         prompt,
         targetPlatform,
+        size,
       );
 
       this.logger.log(`Enhanced Thumbnail Prompt: ${enhancedPrompt}`);
@@ -48,6 +81,7 @@ export class AiService {
       const thumbnailImage = await this.generateThumbnailImage(
         enhancedPrompt,
         sketch,
+        size
       );
 
       // Update user credits
@@ -66,38 +100,22 @@ export class AiService {
   async generateEnhancedPrompt(
     prompt: string,
     targetPlatform: string,
+    size: string,
   ): Promise<string> {
     try {
-      // Determine dimensions based on target platform
-      let dimensions = '1280x720'; // Default dimensions
-      const platform = targetPlatform.toLowerCase();
-
-      if (platform.includes('youtube')) {
-        dimensions = '1280x720';
-      } else if (platform.includes('twitch')) {
-        dimensions = '1280x720';
-      } else if (platform.includes('instagram')) {
-        dimensions = '1280x720';
-      } else if (platform.includes('tiktok')) {
-        dimensions = '1080x1920';
-      } else if (platform.includes('linkedin')) {
-        dimensions = '1200x627';
-      } else if (platform.includes('twitter') || platform.includes('x.com')) {
-        dimensions = '1600x900';
-      }
-
       // Improved prompt template for LLM
       const promptContent = `Analyze the following user prompt and target platform. Extract or infer the following details: [topic], [main subject or scene], [text overlay], [style], [colors], and [emotion].
 
 Then, generate a single, high-quality image generation prompt using this template:
 
-Turn this sketch into a high-resolution ${targetPlatform} thumbnail (${dimensions} pixels) for a video about [topic]. The thumbnail should prominently feature [main subject or scene], with the text '[text overlay]' clearly visible and easy to read. Use a [style] style and a color scheme that includes [colors]. The overall image should be vibrant, attention-grabbing, and convey a sense of [emotion]. Ensure the text is large enough to be readable even at small sizes, and that there’s good contrast between the text and the background.
+Turn this sketch into a high-resolution ${targetPlatform} thumbnail (${size} pixels) for a video about [topic]. The thumbnail should prominently feature [main subject or scene], with the text '[text overlay]' clearly visible and easy to read. Use a [style] style and a color scheme that includes [colors]. The overall image should be vibrant, attention-grabbing, and convey a sense of [emotion]. Ensure the text is large enough to be readable even at small sizes, and that there’s good contrast between the text and the background.
 
 USER'S ORIGINAL PROMPT: "${prompt}"
 TARGET PLATFORM: ${targetPlatform}
-SUGGESTED IMAGE DIMENSIONS: ${dimensions}
+SUGGESTED IMAGE size: ${size}
 
 Instructions:
+- Give the highest priority to the instructions in the user prompt: "${prompt}"
 - If the user's prompt already specifies any of the details, use them directly.
 - If not, infer reasonable values based on the topic and platform.
 - If the style is not specified, default to 'hyper realistic'.
@@ -133,7 +151,10 @@ Instructions:
 
       return response.data.choices[0].message.content;
     } catch (error) {
-      this.logger.error(`Error generating enhanced prompt: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error generating enhanced prompt: ${error.message}`,
+        error.stack,
+      );
       throw new Error(`Failed to generate enhanced prompt: ${error.message}`);
     }
   }
@@ -144,6 +165,7 @@ Instructions:
   async generateThumbnailImage(
     prompt: string,
     sketch: string,
+    size: string,
   ): Promise<string> {
     try {
       // Process the sketch image for OpenAI
@@ -158,14 +180,16 @@ Instructions:
         type: 'image/png',
       });
 
-      const response = await this.openai.images.edit({
-        model: 'gpt-image-1',
-        image: imageFile,
-        prompt: prompt,
-        quality: 'high',
-      });
+      // const response = await this.openai.images.edit({
+      //   model: 'gpt-image-1',
+      //   image: imageFile,
+      //   size,
+      //   prompt: prompt,
+      //   quality: 'high',
+      // });
 
-      return response.data[0].b64_json;
+      // return response.data[0].b64_json;
+      return ""
     } catch (error) {
       this.logger.error(
         `Error generating thumbnail image: ${error.message}`,
@@ -199,7 +223,9 @@ Instructions:
         throw new Error(`User not found during update attempt: ${userEmail}`);
       }
       if (updateResult.modifiedCount === 0) {
-        this.logger.warn(`Credits not updated for user (no modification): ${userEmail}`);
+        this.logger.warn(
+          `Credits not updated for user (no modification): ${userEmail}`,
+        );
       } else {
         this.logger.log(`Credits updated successfully for user: ${userEmail}`);
       }
@@ -212,5 +238,3 @@ Instructions:
     }
   }
 }
-
-
