@@ -5,10 +5,10 @@ import { api } from '@/lib/axios';
 import { useUserInfo } from '@/lib/queries';
 
 interface PricingCardProps {
-  plan: {
+  pack: {
     name: string;
     price: string;
-    period: string;
+    credits: number;
     description: string;
     features: string[];
     buttonText: string;
@@ -16,80 +16,80 @@ interface PricingCardProps {
     popular?: boolean;
     delay: string;
   };
-  onSelect: (plan: string) => void;
+  onSelect: (packName: string, credits: number, price: number) => void;
   isLoading: boolean;
-  selectedPlan: string;
+  selectedPack: string;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
-  plan,
+  pack,
   onSelect,
   isLoading,
-  selectedPlan,
+  selectedPack,
 }) => {
-  const isSelected = selectedPlan === plan.name;
+  const isSelected = selectedPack === pack.name;
 
   return (
     <div 
       className="opacity-0 animate-fade-in flex h-full"
-      style={{ animationDelay: plan.delay, animationFillMode: "forwards" }}
+      style={{ animationDelay: pack.delay, animationFillMode: "forwards" }}
     >
-      <div className={`glass-card relative flex flex-col w-full rounded-2xl transition-all duration-500 hover:scale-[1.02] ${
-        plan.popular ? 'bg-gradient-to-br from-blue-600 to-blue-600 text-white shadow-xl shadow-blue-200' : 'bg-white border border-blue-100 shadow-lg shadow-blue-50'
+      <div className={`relative flex flex-col w-full rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-xl ${
+        pack.popular 
+          ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-lg shadow-blue-500/30 border-2 border-blue-400' 
+          : 'bg-white border border-slate-200 shadow-lg shadow-slate-200/50'
       }`}>
-        {plan.popular && (
-          <div className="absolute border bg-white text-blue-600 border-zinc-300 py-1 text-xs px-2 font-bold rounded-full left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        {pack.popular && (
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-blue-600 text-xs px-4 py-1.5 rounded-full font-bold shadow-sm border border-blue-200">
               Most Popular
           </div>
         )}
         
         <div className="p-6 md:p-8 flex flex-col h-full">
           <div>
-            <div className={`w-12 h-12 rounded-xl mb-4 flex items-center justify-center transform transition-transform duration-500 hover:rotate-12 ${
-              plan.popular ? "bg-blue-600/30 text-white" : "bg-blue-50 text-blue-600"
+            <div className={`w-14 h-14 rounded-xl mb-4 flex items-center justify-center transform transition-transform duration-500 hover:rotate-12 ${
+              pack.popular ? "bg-white/20 text-white" : "bg-blue-50 text-blue-600"
             }`}>
-              {plan.name === "Starter" ? <Fire className="w-6 h-6" iconSecondary='#fff' iconPrimary='#fff'/> :
-               plan.name === "Growth" ? <Bolt className="w-6 h-6"  /> :
-               <Gem className="w-6 h-6" />}
+              {pack.name === "Basic" ? <Fire className="w-7 h-7" iconSecondary={pack.popular ? '#fff' : '#2563eb'} iconPrimary={pack.popular ? '#fff' : '#2563eb'}/> :
+               pack.name === "Standard" ? <Bolt className="w-7 h-7" iconPrimary={pack.popular ? '#fff' : '#2563eb'} /> :
+               <Gem className="w-7 h-7" iconPrimary={pack.popular ? '#fff' : '#2563eb'} />} 
             </div>
 
-            <h3 className={`text-xl font-bold mb-2 ${
-              plan.popular ? "text-white" : "text-blue-900"
+            <h3 className={`text-xl md:text-2xl font-bold mb-2 ${
+              pack.popular ? "text-white" : "text-slate-900"
             }`}>
-              {plan.name}
+              {pack.name}
             </h3>
             
             <div className="mt-2 flex items-baseline">
-              <span className={`text-3xl md:text-4xl font-bold ${
-                plan.popular ? "text-white" : "text-blue-600"
+              <span className={`text-3xl md:text-4xl font-extrabold tracking-tight ${
+                pack.popular ? "text-white" : "text-blue-600"
               }`}>
-                {plan.price}
-              </span>
-              <span className={`ml-1 text-sm ${
-                plan.popular ? "text-blue-50" : "text-blue-600"
-              }`}>
-                {plan.period}
+                {pack.price}
               </span>
             </div>
+             <p className={`mt-1 text-sm font-semibold ${pack.popular ? "text-blue-100" : "text-blue-600"}`}>
+                {pack.credits} Credits
+             </p>
 
-            <p className={`mt-2 text-sm ${
-              plan.popular ? "text-blue-50" : "text-blue-600"
+            <p className={`mt-3 text-sm ${
+              pack.popular ? "text-blue-100" : "text-slate-600"
             }`}>
-              {plan.description}
+              {pack.description}. <span className="font-medium">1 Credit = 1 Thumbnail.</span>
             </p>
           </div>
 
           <div className="flex-grow mt-8">
-            <ul className="space-y-3">
-              {plan.features.map((feature, featureIndex) => (
+            <ul className="space-y-3.5">
+              {pack.features.map((feature, featureIndex) => (
                 <li key={featureIndex} className="flex items-start gap-3">
-                  <div className={`mt-1 ${
-                    plan.popular ? "text-white" : "text-blue-600"
+                  <div className={`mt-0.5 flex-shrink-0 ${
+                    pack.popular ? "text-white" : "text-blue-600"
                   }`}>
-                    <Check className="h-5 w-5" iconPrimary={plan.popular ? "#fff" : "#2563eb"} />
+                    <Check className="h-5 w-5" iconPrimary={pack.popular ? "#fff" : "#2563eb"} />
                   </div>
-                  <span className={`text-sm leading-relaxed ${
-                    plan.popular ? "text-blue-50" : "text-blue-700"
+                  <span className={`text-sm md:text-base leading-relaxed ${
+                    pack.popular ? "text-blue-50" : "text-slate-700"
                   }`}>
                     {feature}
                   </span>
@@ -100,12 +100,19 @@ const PricingCard: React.FC<PricingCardProps> = ({
 
           <div className="mt-8">
             <button
-              onClick={() => {onSelect(plan.name)}}
+              onClick={() => {
+                const priceValue = parseFloat(pack.price.replace('$', '')); 
+                onSelect(pack.name, pack.credits, priceValue);
+              }}
               disabled={isLoading}
-              className={`w-full py-3 rounded-xl text-base font-medium transition-all duration-300 ${
-                plan.buttonVariant === 'primary'
-                  ? "bg-white text-blue-600 hover:bg-blue-50"
-                  : "bg-blue-600 text-white hover:bg-blue-600"
+              className={`w-full py-3.5 rounded-xl text-base font-medium transition-all duration-300 ${
+                pack.buttonVariant === 'primary'
+                  ? pack.popular 
+                    ? "bg-white text-blue-600 hover:bg-blue-50 shadow-md hover:shadow-xl"
+                    : "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-xl shadow-blue-500/30"
+                  : pack.popular
+                    ? "bg-white/20 text-white hover:bg-white/30 border border-white/50 backdrop-blur-sm hover:shadow-lg"
+                    : "bg-white text-blue-600 border border-slate-300 hover:bg-slate-50 shadow-md hover:shadow-lg"
               } ${isLoading ? "opacity-75 cursor-not-allowed" : ""} flex items-center justify-center`}
             >
               {isLoading && isSelected ? (
@@ -129,7 +136,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
                   />
                 </svg>
               ) : null}
-              {isLoading && isSelected ? "Processing..." : plan.buttonText}
+              {isLoading && isSelected ? "Processing..." : pack.buttonText}
             </button>
           </div>
         </div>
@@ -139,102 +146,118 @@ const PricingCard: React.FC<PricingCardProps> = ({
 };
 
 const SubscriptionDialog = () => {
-  const [selectedPlan, setSelectedPlan] = useState<string>("Growth");
+  const [selectedPack, setSelectedPack] = useState<string>("Standard");
   const [isPending, setIsPending] = useState(false);
   const {data , isLoading} = useUserInfo()
-  console.log(data)
-  if (data?.plan !== "none" || isLoading)
+  
+  if (!isLoading && (data?.credits ?? 0) > 0) {
     return null;
+  }
+  if (isLoading) {
+    return null;
+  }
 
-  const handlePlanSelection = async (plan: string) => {
-    setSelectedPlan(plan);
+  const handlePackPurchase = async (packName: string, credits: number, price: number) => {
+    setSelectedPack(packName);
     setIsPending(true);
     
     try {
-      const response = await api.post("/payments/create-checkout-session", {
-        plan,
-        subscriptionType: plan === "Pro" ? "yearly" : "monthly"
+      const response = await api.post("/payments/create-checkout-session", { 
+        itemType: 'credits',
+        packName: packName,
+        credits: credits,
+        amount: price
       });
       window.location.href = response.data.url;
     } catch (error) {
-      console.error(error);
-      // Add your toast notification here
+      console.error("Checkout session creation failed:", error);
       setIsPending(false);
     }
   };
 
-  const plans = [
+  const packs = [
     {
-      name: "Weekly",
+      name: "Basic",
       price: "$9.99",
-      period: "/week",
-      description: "Perfect for getting started",
+      credits: 20,
+      description: "Great for trying things out",
       features: [
-        "20 thumbnail per week",
+        "20 image generation credits",
         "High-quality thumbnails",
-        "24/7 support",
         "High resolution downloads",
-        "PNG & JPG downloads"
+        "PNG & JPG downloads",
+        "24/7 support",
       ],
-      buttonText: "Get Started",
+      buttonText: "Get 20 Credits",
       buttonVariant: "outline",
       delay: "0.2s"
     },
     {
-      name: "Starter",
-      price: "$20",
-      period: "/month",
-      description: "Ideal for small creators",
+      name: "Standard",
+      price: "$19.99",
+      credits: 50,
+      description: "Ideal for regular use",
       features: [
-        "50 thumbnail per month",
+        "50 image generation credits",
+        "Slightly lower cost per image",
         "High-quality thumbnails",
-        "24/7 support",
         "High resolution downloads",
-        "PNG & JPG downloads"
+        "PNG & JPG downloads",
+        "Priority support",
       ],
-      buttonText: "Get Started",
+      buttonText: "Get 50 Credits",
       buttonVariant: "primary",
       popular: true,
       delay: "0.4s"
     },
     {
-      name: "Growth",
-      price: "$35",
-      period: "/month",
-      description: "Best for growing channels",
+      name: "Premium",
+      price: "$34.99",
+      credits: 100,
+      description: "Best value for creators",
       features: [
-        "100 thumbnail per month",
+        "100 image generation credits",
+        "Best cost per image",
         "High-quality thumbnails",
-        "24/7 support",
         "High resolution downloads",
-        "PNG & JPG downloads"
+        "PNG & JPG downloads",
+        "Priority support",
       ],
-      buttonText: "Get Growth Plan",
+      buttonText: "Get 100 Credits",
       buttonVariant: "outline",
       delay: "0.6s"
     }
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl p-6 md:p-8 max-w-6xl w-full mx-auto max-h-[90vh] overflow-y-auto">
-        <div className="text-center space-y-4 mb-12">
-          <h2 className="text-3xl font-bold text-slate-800">
-            Your subscription has expired
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-gradient-to-br from-white via-slate-50 to-white rounded-2xl p-6 md:p-8 max-w-6xl w-full mx-auto max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none rounded-2xl">
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
+          <div className="absolute bottom-1/3 -right-24 w-64 h-64 bg-indigo-200 rounded-full opacity-20 blur-3xl"></div>
+        </div>
+
+        <div className="text-center space-y-4 mb-12 relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">
+            Purchase <span className="text-blue-600 relative inline-block">
+              Credits
+              <span className="absolute bottom-1 left-0 w-full h-2 bg-blue-200 -z-10 rounded-full transform translate-y-1/2"></span>
+            </span> to Continue
           </h2>
-          <p className="text-base text-slate-600 max-w-2xl mx-auto">
-            Select a plan to continue using all features
+          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto">
+            Looks like you&lsquo;re out of credits. Choose a pack below to keep creating amazing thumbnails! <span className="font-semibold">(1 Credit = 1 Thumbnail)</span>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto relative z-10">
+          {packs.map((pack, index) => (
             <PricingCard
               key={index}
-              plan={plan}
-              onSelect={handlePlanSelection}
+              pack={pack}
+              onSelect={handlePackPurchase}
               isLoading={isPending}
-              selectedPlan={selectedPlan}
+              selectedPack={selectedPack}
             />
           ))}
         </div>

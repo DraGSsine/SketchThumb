@@ -3,105 +3,141 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleCheck } from "../../../public/icons/SvgIcons";
+import { CircleCheck, Fire, Bolt, Gem } from "../../../public/icons/SvgIcons";
 
 const Pricing = () => {
-  const plans = [
+  const packs = [
     {
-      name: "Weekly",
+      name: "Basic",
       price: "$9.99",
-      period: "/week",
-      description: "Perfect for getting started",
+      credits: 20,
+      description: "Great for trying things out",
       features: [
-        "20 thumbnail per week",
+        "20 image generation credits",
         "High-quality thumbnails",
-        "24/7 support",
         "High resolution downloads",
-        "PNG & JPG downloads"
+        "PNG & JPG downloads",
+        "24/7 support",
       ],
-      buttonText: "Get Started",
+      buttonText: "Get 20 Credits",
       buttonVariant: "outline",
-      delay: "0.2s"
+      delay: "0.2s",
+      icon: <Fire className="w-7 h-7" iconPrimary="#2563eb" />
     },
     {
-      name: "Starter",
-      price: "$20",
-      period: "/month",
-      description: "Ideal for small creators",
+      name: "Standard",
+      price: "$19.99",
+      credits: 50,
+      description: "Ideal for regular use",
       features: [
-        "50 thumbnail per month",
+        "50 image generation credits",
+        "Slightly lower cost per image",
         "High-quality thumbnails",
-        "24/7 support",
         "High resolution downloads",
-        "PNG & JPG downloads"
+        "PNG & JPG downloads",
+        "Priority support",
       ],
-      buttonText: "Get Started",
+      buttonText: "Get 50 Credits",
       buttonVariant: "primary",
       popular: true,
-      delay: "0.4s"
+      delay: "0.4s",
+      icon: <Bolt className="w-7 h-7" iconPrimary="#ffffff" />
     },
     {
-      name: "Growth",
-      price: "$35",
-      period: "/month",
-      description: "Best for growing channels",
+      name: "Premium",
+      price: "$34.99",
+      credits: 100,
+      description: "Best value for creators",
       features: [
-        "100 thumbnail per month",
+        "100 image generation credits",
+        "Best cost per image",
         "High-quality thumbnails",
-        "24/7 support",
         "High resolution downloads",
-        "PNG & JPG downloads"
+        "PNG & JPG downloads",
+        "Priority support",
       ],
-      buttonText: "Get Growth Plan",
+      buttonText: "Get 100 Credits",
       buttonVariant: "outline",
-      delay: "0.6s"
+      delay: "0.6s",
+      icon: <Gem className="w-7 h-7" iconPrimary="#2563eb" />
     }
   ];
 
   return (
-    <section id="pricing" className="py-16 md:py-20 bg-blue-50 dark:bg-slate-900/60">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-5">
-            Simple, <span className="text-blue-600 dark:text-blue-400">Transparent</span> Pricing
+    <section id="pricing" className="py-16 md:py-20 bg-gradient-to-b from-white to-blue-50 dark:from-slate-900 dark:to-slate-800 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-200 dark:bg-blue-900/20 rounded-full opacity-50 blur-3xl"></div>
+        <div className="absolute top-1/2 -right-24 w-64 h-64 bg-indigo-200 dark:bg-indigo-900/20 rounded-full opacity-40 blur-3xl"></div>
+        <div className="absolute -bottom-32 left-1/3 w-72 h-72 bg-cyan-200 dark:bg-cyan-900/20 rounded-full opacity-30 blur-3xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold mb-5 text-slate-900 dark:text-white tracking-tight">
+            Simple, <span className="text-blue-600 dark:text-blue-400 relative">
+              Flexible
+              <span className="absolute bottom-1 left-0 w-full h-2 bg-blue-200 dark:bg-blue-800/50 -z-10 rounded-full transform translate-y-1/2"></span>
+            </span> Pricing
           </h2>
           <p className="text-base md:text-lg max-w-2xl mx-auto text-slate-700 dark:text-slate-300">
-            Choose the plan that fits your content creation needs. No hidden fees.
+            Choose a credit pack that fits your needs. Pay once, use credits anytime. <span className="font-semibold">(1 Credit = 1 Thumbnail)</span>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <div key={index} className="flex">
-              <Card className={`relative flex flex-col w-full ${plan.popular ? 'border-blue-600 shadow-lg' : 'border-slate-200 dark:border-slate-700'}`}>
-                {plan.popular && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 dark:bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 max-w-6xl mx-auto">
+          {packs.map((pack, index) => (
+            <div key={index} className="flex opacity-0 animate-fade-in" style={{ animationDelay: pack.delay, animationFillMode: "forwards" }}>
+              <Card className={`relative flex flex-col w-full rounded-2xl transition-all duration-300 hover:scale-[1.03] hover:shadow-xl ${
+                pack.popular 
+                  ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-lg shadow-blue-500/30 border-2 border-blue-400' 
+                  : 'bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 shadow-lg shadow-slate-200/50 dark:shadow-black/20'
+              }`}>
+                {pack.popular && (
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-blue-600 text-xs px-4 py-1.5 rounded-full font-bold shadow-sm border border-blue-200">
                     Most Popular
                   </div>
                 )}
-                <CardHeader>
-                  <CardTitle className="text-lg md:text-xl font-bold text-slate-800 dark:text-slate-100">{plan.name}</CardTitle>
-                  <div className="mt-2 flex items-baseline">
-                    <span className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{plan.price}</span>
-                    {plan.period && <span className="text-slate-600 dark:text-slate-400 ml-1">{plan.period}</span>}
+                <CardHeader className="pt-8">
+                  <div className={`w-14 h-14 mb-4 rounded-xl flex items-center justify-center transform transition-transform duration-500 hover:rotate-12 ${
+                    pack.popular ? "bg-white/20" : "bg-blue-50 dark:bg-blue-900/30"
+                  }`}>
+                    {pack.icon}
                   </div>
-                  <CardDescription className="mt-2 text-sm md:text-base text-slate-700 dark:text-slate-300">{plan.description}</CardDescription>
+                  <CardTitle className={`text-xl md:text-2xl font-bold ${pack.popular ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}>{pack.name}</CardTitle>
+                  <div className="mt-3 flex items-baseline">
+                    <span className={`text-3xl md:text-4xl font-extrabold tracking-tight ${pack.popular ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`}>{pack.price}</span>
+                  </div>
+                  <p className={`mt-1 text-sm font-semibold ${pack.popular ? 'text-blue-100' : 'text-blue-600 dark:text-blue-400'}`}>
+                    {pack.credits} Credits
+                  </p>
+                  <CardDescription className={`mt-3 text-sm md:text-base ${pack.popular ? 'text-blue-100' : 'text-slate-600 dark:text-slate-300'}`}>
+                    {pack.description}. <span className="font-medium">1 Credit = 1 Thumbnail.</span>
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start">
-                        <CircleCheck className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mr-2" iconPrimary="#fff" />
-                        <span className="text-sm md:text-base text-slate-700 dark:text-slate-300">{feature}</span>
+                  <ul className="space-y-3.5">
+                    {pack.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <CircleCheck className={`h-5 w-5 flex-shrink-0 mt-0.5 ${pack.popular ? 'text-white' : 'text-blue-600 dark:text-blue-400'}`} iconSecondary={pack.popular ? "#3b82f6" : "#fff"} iconPrimary={pack.popular ? "#fff" : "#3b82f6"} />
+                        <span className={`text-sm md:text-base ${pack.popular ? 'text-blue-50' : 'text-slate-700 dark:text-slate-300'}`}>{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </CardContent>
                 <CardFooter>
                   <Button 
-                    className={`w-full ${plan.buttonVariant === 'primary' ? "bg-blue-600 text-white hover:bg-blue-600/90" : "bg-white border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-600 dark:text-blue-400 dark:hover:bg-slate-800"}`}
+                    className={`w-full py-3.5 rounded-xl text-base font-medium transition-all duration-300 ${
+                      pack.buttonVariant === 'primary'
+                        ? pack.popular 
+                          ? "bg-white text-blue-600 hover:bg-blue-50 shadow-md hover:shadow-xl"
+                          : "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-xl shadow-blue-500/30 dark:bg-blue-500 dark:hover:bg-blue-600"
+                        : pack.popular
+                          ? "bg-white/20 text-white hover:bg-white/30 border border-white/50 backdrop-blur-sm hover:shadow-lg"
+                          : "bg-white text-blue-600 border border-slate-300 hover:bg-slate-50 shadow-md hover:shadow-lg dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 dark:hover:bg-slate-600"
+                    }`}
                   >
-                    {plan.buttonText}
+                    {pack.buttonText}
                   </Button>
                 </CardFooter>
               </Card>
