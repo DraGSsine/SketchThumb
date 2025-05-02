@@ -5,7 +5,6 @@ import Testimonials from "@/components/landing/testimonials";
 import FAQ from "@/components/landing/faq";
 import Hero from "@/components/landing/hero";
 import Navbar from "@/components/landing/navbar";
-import CTA from "@/components/landing/cta";
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -16,7 +15,6 @@ export default function Home() {
         <Testimonials />
         <Pricing />
         <FAQ />
-        <CTA />
       </main>
       <Footer />
     </div>

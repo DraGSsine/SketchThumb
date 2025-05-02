@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleCheck, Fire, Bolt, Gem } from "../../../public/icons/SvgIcons";
 
 const Pricing = () => {
@@ -11,10 +11,9 @@ const Pricing = () => {
       name: "Basic",
       price: "$9.99",
       credits: 20,
-      description: "Great for trying things out",
       features: [
-        "20 image generation credits",
-        "High-quality thumbnails",
+        "20 thumbnail generations",
+        "High-quality output",
         "High resolution downloads",
         "PNG & JPG downloads",
         "24/7 support",
@@ -28,11 +27,10 @@ const Pricing = () => {
       name: "Standard",
       price: "$19.99",
       credits: 50,
-      description: "Ideal for regular use",
       features: [
-        "50 image generation credits",
-        "Slightly lower cost per image",
-        "High-quality thumbnails",
+        "50 thumbnail generations",
+        "Slightly lower cost per thumbnail",
+        "High-quality output",
         "High resolution downloads",
         "PNG & JPG downloads",
         "Priority support",
@@ -47,11 +45,10 @@ const Pricing = () => {
       name: "Premium",
       price: "$34.99",
       credits: 100,
-      description: "Best value for creators",
       features: [
-        "100 image generation credits",
-        "Best cost per image",
-        "High-quality thumbnails",
+        "100 thumbnail generations",
+        "Best cost per thumbnail",
+        "High-quality output",
         "High resolution downloads",
         "PNG & JPG downloads",
         "Priority support",
@@ -76,13 +73,16 @@ const Pricing = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-5 text-slate-900 dark:text-white tracking-tight">
             Simple, <span className="text-blue-600 dark:text-blue-400 relative">
-              Flexible
+              Transparent
               <span className="absolute bottom-1 left-0 w-full h-2 bg-blue-200 dark:bg-blue-800/50 -z-10 rounded-full transform translate-y-1/2"></span>
             </span> Pricing
           </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto text-slate-700 dark:text-slate-300">
-            Choose a credit pack that fits your needs. Pay once, use credits anytime. <span className="font-semibold">(1 Credit = 1 Thumbnail)</span>
+          <p className="text-base md:text-lg max-w-2xl mx-auto text-slate-700 dark:text-slate-300 mb-4">
+            Choose a credit pack that fits your needs. Pay once, use credits anytime.
           </p>
+          <div className="inline-block bg-blue-100 dark:bg-blue-900/30 px-5 py-2.5 rounded-full text-blue-700 dark:text-blue-300 font-medium text-sm md:text-base border border-blue-200 dark:border-blue-800/50 shadow-sm">
+            1 Credit = 1 Thumbnail Generation
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 max-w-6xl mx-auto">
@@ -111,9 +111,6 @@ const Pricing = () => {
                   <p className={`mt-1 text-sm font-semibold ${pack.popular ? 'text-blue-100' : 'text-blue-600 dark:text-blue-400'}`}>
                     {pack.credits} Credits
                   </p>
-                  <CardDescription className={`mt-3 text-sm md:text-base ${pack.popular ? 'text-blue-100' : 'text-slate-600 dark:text-slate-300'}`}>
-                    {pack.description}. <span className="font-medium">1 Credit = 1 Thumbnail.</span>
-                  </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <ul className="space-y-3.5">

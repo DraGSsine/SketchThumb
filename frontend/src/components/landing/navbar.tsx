@@ -20,10 +20,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 w-full z-50 ${
-      isScrolled ? "bg-white shadow-sm py-4 dark:bg-slate-900" : "py-6"
+    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      isScrolled 
+        ? "bg-white/95 backdrop-blur-sm shadow-md dark:bg-slate-900/95 py-4" 
+        : "bg-transparent py-6"
     }`}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <nav className="flex items-center justify-between">
           <Logo size={32} />
 
@@ -40,7 +42,7 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium"
+                  className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium transition-colors"
                 >
                   {item.name}
                 </Link>
@@ -49,12 +51,14 @@ const Navbar = () => {
 
             <div className="flex items-center space-x-3 ml-4">
               <Link href="/auth/signin">
-                <Button variant="outline" className="border-blue-600 text-blue-600">
+                <Button variant="outline" className="rounded-xl border-blue-600 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-slate-800">
                   Log In
                 </Button>
               </Link>
               <Link href="/auth/signup">
-                <Button className="bg-blue-500 text-white">Get Started</Button>
+                <Button className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 hover:shadow-lg transition-all duration-300">
+                  Get Started
+                </Button>
               </Link>
             </div>
           </div>
@@ -62,7 +66,8 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="md:hidden p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? (
               <X className="w-6 h-6" />
@@ -75,10 +80,11 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-gray-800">
-          <div className="container mx-auto px-4 py-4">
-            <div className="space-y-3 mb-4">
+        <div className="md:hidden bg-white/95 backdrop-blur-sm dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 shadow-lg">
+          <div className="container mx-auto px-6 py-5">
+            <div className="space-y-4 mb-6">
               {[
+                { name: "Home", href: "/" },
                 { name: "Pricing", href: "/#pricing" },
                 { name: "FAQ", href: "/#faq" },
                 { name: "Privacy", href: "/privacy" },
@@ -87,7 +93,7 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium"
+                  className="block text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -96,13 +102,15 @@ const Navbar = () => {
             </div>
             
             <div className="space-y-3">
-              <Link href="/auth/signin">
-                <Button variant="outline" className="w-full border-blue-600 text-blue-600">
+              <Link href="/auth/signin" className="block w-full">
+                <Button variant="outline" className="w-full rounded-xl border-blue-600 text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-slate-800">
                   Log In
                 </Button>
               </Link>
-              <Link href="/auth/signup">
-                <Button className="w-full bg-blue-600">Get Started</Button>
+              <Link href="/auth/signup" className="block w-full">
+                <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 hover:shadow-lg transition-all duration-300">
+                  Get Started
+                </Button>
               </Link>
             </div>
           </div>

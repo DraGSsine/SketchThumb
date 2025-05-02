@@ -9,7 +9,6 @@ interface PricingCardProps {
     name: string;
     price: string;
     credits: number;
-    description: string;
     features: string[];
     buttonText: string;
     buttonVariant: string;
@@ -71,12 +70,6 @@ const PricingCard: React.FC<PricingCardProps> = ({
              <p className={`mt-1 text-sm font-semibold ${pack.popular ? "text-blue-100" : "text-blue-600"}`}>
                 {pack.credits} Credits
              </p>
-
-            <p className={`mt-3 text-sm ${
-              pack.popular ? "text-blue-100" : "text-slate-600"
-            }`}>
-              {pack.description}. <span className="font-medium">1 Credit = 1 Thumbnail.</span>
-            </p>
           </div>
 
           <div className="flex-grow mt-8">
@@ -180,10 +173,9 @@ const SubscriptionDialog = () => {
       name: "Basic",
       price: "$9.99",
       credits: 20,
-      description: "Great for trying things out",
       features: [
-        "20 image generation credits",
-        "High-quality thumbnails",
+        "20 thumbnail generations",
+        "High-quality output",
         "High resolution downloads",
         "PNG & JPG downloads",
         "24/7 support",
@@ -196,11 +188,10 @@ const SubscriptionDialog = () => {
       name: "Standard",
       price: "$19.99",
       credits: 50,
-      description: "Ideal for regular use",
       features: [
-        "50 image generation credits",
-        "Slightly lower cost per image",
-        "High-quality thumbnails",
+        "50 thumbnail generations",
+        "Slightly lower cost per thumbnail",
+        "High-quality output",
         "High resolution downloads",
         "PNG & JPG downloads",
         "Priority support",
@@ -214,11 +205,10 @@ const SubscriptionDialog = () => {
       name: "Premium",
       price: "$34.99",
       credits: 100,
-      description: "Best value for creators",
       features: [
-        "100 image generation credits",
-        "Best cost per image",
-        "High-quality thumbnails",
+        "100 thumbnail generations",
+        "Best cost per thumbnail",
+        "High-quality output",
         "High resolution downloads",
         "PNG & JPG downloads",
         "Priority support",
@@ -245,9 +235,12 @@ const SubscriptionDialog = () => {
               <span className="absolute bottom-1 left-0 w-full h-2 bg-blue-200 -z-10 rounded-full transform translate-y-1/2"></span>
             </span> to Continue
           </h2>
-          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto">
-            Looks like you&lsquo;re out of credits. Choose a pack below to keep creating amazing thumbnails! <span className="font-semibold">(1 Credit = 1 Thumbnail)</span>
+          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-3">
+            Looks like you&apos;re out of credits. Choose a pack below to keep creating amazing thumbnails!
           </p>
+          <div className="inline-block bg-blue-100 px-5 py-2.5 rounded-full text-blue-700 font-medium text-sm md:text-base border border-blue-200 shadow-sm">
+            1 Credit = 1 Thumbnail Generation
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto relative z-10">
