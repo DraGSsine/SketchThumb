@@ -50,14 +50,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "http://localhost:3000",
+    url: "https://scrive.pro",
     siteName: "scrive- Sketch toThumbnail Converter",
     title: "scrive | Transform Sketches into ProfessionalThumbnails",
     description:
       "Turn your sketches and images into professionalThumbnails with SketchThumb. Our AI-powered tool helps you create stunningThumbnails from your design ideas quickly and efficiently.",
     images: [
       {
-        url: "http://localhost:3000/og-image.png",
+        url: "https://scrive.pro/og-image.png",
         width: 1200,
         height: 630,
         alt: "scriveSketch toThumbnail Converter Preview",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     description:
       "Transform your sketches and images into professionalThumbnails with SketchThumb. Create stunning brand identities with our AI-powered conversion tool.",
     creator: "@yassin_ouchen",
-    images: ["http://localhost:3000/twitter-image.png"],
+    images: ["https://scrive.pro/twitter-image.png"],
   },
   viewport: {
     width: "device-width",
@@ -78,9 +78,9 @@ export const metadata: Metadata = {
     maximumScale: 1,
   },
   alternates: {
-    canonical: "http://localhost:3000",
+    canonical: "https://scrive.pro",
     languages: {
-      "en-US": "http://localhost:3000",
+      "en-US": "https://scrive.pro",
     },
   },
   category: "productivity",

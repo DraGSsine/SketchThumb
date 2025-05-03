@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { getPosts } from '@/lib/posts'; // Import the getPosts function
 
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'https://scrive.pro'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Get all posts
