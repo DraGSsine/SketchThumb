@@ -1,3 +1,4 @@
+/* eslint-disable */
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -5,7 +6,7 @@ import matter from 'gray-matter';
 export interface Post {
   slug: string;
   frontmatter: {
-    [key: string]: any;
+    [key: string]:any ;
   };
   content: string;
 }

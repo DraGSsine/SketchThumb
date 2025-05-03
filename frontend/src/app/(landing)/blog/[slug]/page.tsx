@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
@@ -21,9 +21,7 @@ interface BlogPostParams {
 
 // Generate metadata for SEO
 export async function generateMetadata(
-  { params }: BlogPostParams,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+  { params }: BlogPostParams): Promise<Metadata> {
   const post = getPostBySlug(params.slug);
   
   if (!post) {

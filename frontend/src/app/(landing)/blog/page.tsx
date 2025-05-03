@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getPosts, Post } from '@/lib/posts'; // Import from the new location
+import { getPosts } from '@/lib/posts'; // Import from the new location
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight } from 'lucide-react';
 
