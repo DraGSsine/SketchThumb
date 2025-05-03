@@ -33,7 +33,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-5">
               {[
-                { name: "Home", href: "/" },
+                { name: "Blog", href: "/blog" },
                 { name: "Pricing", href: "/#pricing" },
                 { name: "FAQ", href: "/#faq" },
                 { name: "Privacy", href: "/privacy" },
@@ -84,7 +84,7 @@ const Navbar = () => {
           <div className="container mx-auto px-6 py-5">
             <div className="space-y-4 mb-6">
               {[
-                { name: "Home", href: "/" },
+                { name: "Blog", href: "/blog" },
                 { name: "Pricing", href: "/#pricing" },
                 { name: "FAQ", href: "/#faq" },
                 { name: "Privacy", href: "/privacy" },
