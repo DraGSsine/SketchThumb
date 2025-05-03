@@ -37,7 +37,6 @@ const Sketch: React.FC = (): React.ReactElement => {
   const [strokeWidth, setStrokeWidth] = useState<number>(2);
   
   // Used in handleIconPathSelect for tracking added objects
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   // Add constants for both storage keys
   const DRAWING_STORAGE_KEY = 'logo-generator-canvas';
   const DRAWING_JSON_STORAGE_KEY = 'logo-generator-canvas-json';
