@@ -12,7 +12,6 @@ export default async function  BlogPost({ params }:  any) {
   if (!post) {
     notFound();
   }
-
   const { frontmatter, content } = post;
   const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     year: "numeric",
