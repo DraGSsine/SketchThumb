@@ -4,8 +4,10 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleCheck, Fire, Bolt, Gem } from "../../../public/icons/SvgIcons";
+import { useRouter } from "next/navigation";
 
 const Pricing = () => {
+  const router = useRouter()
   const packs = [
     {
       name: "Basic",
@@ -123,7 +125,8 @@ const Pricing = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button 
+                  <Button
+                    onClick={(()=>{router.push("/auth/signup")})}
                     className={`w-full py-3.5 rounded-xl text-base font-medium transition-all duration-300 ${
                       pack.buttonVariant === 'primary'
                         ? pack.popular 
