@@ -6,8 +6,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export default function BlogPost({ params }:  any) {
-  const post = getPostBySlug(params.slug);
+export default async function  BlogPost({ params }:  any) {
+  const post = getPostBySlug(await params.slug);
 
   if (!post) {
     notFound();
